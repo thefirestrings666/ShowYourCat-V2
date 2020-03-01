@@ -1,5 +1,5 @@
 <template>
-  <div class="page-wrapper">
+  <div v-if="isUserLoggedIn" class="page-wrapper">
     <h1 class="home-page-title">{{ appTitle }}</h1>
     <img alt="logo-bento" class="logo" src="@/assets/img/bento-starter.svg" />
 
@@ -11,12 +11,20 @@
       >Documentation →</a
     >
   </div>
+  <div v-else class="page-wrapper">
+    <authentication v-show="user !== undefined && !user && networkOnLine">
+    </authentication>
+  </div>
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapState, mapGetters } from 'vuex'
+import authentication from '../components/Authentication.vue'
 
 export default {
+  components: {
+    authentication
+  },
   head() {
     return {
       title: {
@@ -31,7 +39,11 @@ export default {
       ]
     }
   },
-  computed: mapState('app', ['appTitle'])
+  computed: {
+    ...mapState('app', ['appTitle', 'networkOnLine']),
+    ...mapGetters('authentication', ['isUserLoggedIn']),
+    ...mapState('authentication', ['user'])
+  }
 }
 </script>
 
@@ -64,6 +76,21 @@ export default {
     text-decoration: none;
     width: fit-content;
     font-weight: 500;
+  }
+
+  .login-btn {
+    margin-top: 20px;
+    cursor: pointer;
+    padding: 5px 20px;
+    border: 1px solid;
+    display: inline-block;
+    border-radius: 3px;
+    border-color: #2c3e50;
+
+    &:hover {
+      color: $vue-color;
+      border-color: $vue-color;
+    }
   }
 }
 </style>
