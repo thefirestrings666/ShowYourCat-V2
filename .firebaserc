@@ -1,5 +1,6 @@
 {
   "projects": {
-    "default": "bento-starter"
+    "default": "bento-starter",
+    "ShowYourCat V2": "showyourcat-v2"
   }
 }

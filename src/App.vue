@@ -41,6 +41,12 @@ export default {
 <style lang="scss">
 body {
   margin: 0;
+  background-image: url('../src/assets/background.jpg');
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-size: cover;
+  background-position: top;
+  -webkit-font-smoothing: antialiased;
 
   a {
     font-weight: 500;
