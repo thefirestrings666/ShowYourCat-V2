@@ -1,18 +1,18 @@
 <template>
   <header class="navbar" :class="{ offline: !networkOnLine }">
     <router-link to="/home">
-      <img alt="logo-bento" class="logo" src="@/assets/img/bento-starter.svg" />
+      <img alt="logo-bento" class="logo" src="@/assets/catface4.svg" />
       <span class="site-name title-desktop">Show Your Cat</span>
       <span class="site-name title-mobile"></span>
     </router-link>
     <div class="links">
       <nav class="nav-links">
-        <div class="nav-item">
+        <!-- <div class="nav-item">
           <router-link to="/products">Products</router-link>
-        </div>
-        <div v-if="!isUserLoggedIn && networkOnLine" class="nav-item">
+        </div> -->
+        <!-- <div v-if="!isUserLoggedIn && networkOnLine" class="nav-item">
           <router-link to="/login">Login</router-link>
-        </div>
+        </div> -->
         <div
           v-if="isUserLoggedIn && networkOnLine"
           class="nav-item logout-item"
@@ -64,7 +64,7 @@ export default {
   background-color: $navbar-color;
   box-sizing: border-box;
   border-bottom: 1px solid #eaecef;
-  padding: 0.7rem 1.5rem;
+  padding: 0.7rem 1.5rem 0.7rem 0.7rem;
   line-height: 2.2rem;
 
   a {
@@ -104,8 +104,10 @@ export default {
   }
 
   .logo {
-    height: 24px;
+    height: 35px;
     padding-right: 8px;
+    filter: invert(21%) sepia(5%) saturate(2878%) hue-rotate(346deg)
+      brightness(104%) contrast(97%);
   }
 
   .links {

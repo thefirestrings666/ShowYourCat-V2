@@ -1,7 +1,7 @@
 <template>
   <div class="component-wrapper">
-    <img src="@/assets/catface2.svg" />
-    <div class="spanner">
+    <img src="@/assets/catface4.svg" />
+    <div v-if="v_spanner" class="spanner">
       <h4>Sign-in</h4>
       <ul>
         <li>
@@ -20,9 +20,9 @@
       </ul>
     </div>
 
-    <div class="separator" />
+    <div v-if="v_spanner" class="separator" />
 
-    <div class="spanner">
+    <div v-if="v_spanner" class="spanner">
       <h4>With socials</h4>
       <ul>
         <li>
@@ -51,12 +51,51 @@
             v-show="user !== undefined && !user && networkOnLine"
             data-test="login-btn"
             class="login-btn"
-            @click="signUp"
+            @click="signUp_access"
           >
             Sign-up !
           </div>
         </li>
       </ul>
+    </div>
+    <div v-else class="connexion-wrapper">
+      <form>
+        <ul>
+          <h4>Sign-up</h4>
+          <li>
+            <label>Nickname :</label>
+            <input v-model="u_nickname" type="text" />
+            <span v-if="errorNickname">{{ errorNickname }}</span>
+          </li>
+          <li>
+            <label>Mail :</label>
+            <input v-model="u_mail" type="text" />
+            <span v-if="errorEmail">{{ errorEmail }}</span>
+          </li>
+          <li>
+            <label>Password :</label>
+            <input v-model="u_password" type="password" />
+            <span v-if="errorPassword">{{ errorPassword }}</span>
+          </li>
+          <li>
+            <label>Verify password :</label>
+            <input v-model="u_password2" type="password" />
+            <span v-if="errorPassword2">{{ errorPassword2 }}</span>
+          </li>
+          <li>
+            <div
+              data-test="login-btn"
+              class="login-btn"
+              @click="signUp_validation"
+            >
+              Sign-up !
+            </div>
+            <div data-test="login-btn" class="login-btn" @click="sigUp_back">
+              Back
+            </div>
+          </li>
+        </ul>
+      </form>
     </div>
   </div>
 </template>
@@ -67,6 +106,23 @@ import { desktop as isDekstop } from 'is_js'
 import { mapState, mapGetters, mapMutations } from 'vuex'
 
 export default {
+  data() {
+    return {
+      v_spanner: true,
+
+      u_nickname: '',
+      u_mail: '',
+      u_password: '',
+      u_password2: '',
+
+      reg: /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,24}))$/,
+
+      errorNickname: '',
+      errorEmail: '',
+      errorPassword: '',
+      errorPassword2: ''
+    }
+  },
   computed: {
     ...mapState('app', ['appTitle', 'networkOnLine']),
     ...mapGetters('authentication', ['isUserLoggedIn']),
@@ -95,8 +151,71 @@ export default {
     loginByMail() {
       // todo
     },
+    signUp_access() {
+      this.v_spanner = false
+    },
+    sigUp_back() {
+      this.v_spanner = true
+      this.resetData()
+    },
+
+    signUp_validation() {
+      // Function to validate Sign-Up form fields
+
+      // Nickname verification
+      if (this.u_nickname === null || this.u_nickname === '') {
+        this.errorNickname = 'Please Enter a nickname'
+      } else {
+        this.errorNickname = ''
+      }
+      // Email verification
+      if (this.u_mail === null || this.u_mail === '') {
+        this.errorEmail = 'Please Enter Email'
+      } else if (!this.reg.test(this.u_mail)) {
+        this.errorEmail = 'Please Enter Correct Email'
+      } else if (this.reg.test(this.u_mail)) {
+        this.errorEmail = ''
+      }
+      // Password 1 verification
+      if (this.u_password.length < 5 || this.u_password === '') {
+        this.errorPassword = 'Minimum of 5 letters'
+      } else {
+        this.errorPassword = ''
+      }
+      // Password 2 verification
+      if (
+        this.u_password !== this.u_password2 ||
+        this.u_password2 === null ||
+        this.u_password2 === ''
+      ) {
+        this.errorPassword2 = 'Passwords are not corresonding'
+      } else {
+        this.errorPassword2 = ''
+      }
+
+      if (
+        this.errorNickname === '' &&
+        this.errorEmail === '' &&
+        this.errorPassword === '' &&
+        this.errorPassword2 === ''
+      ) {
+        this.signUp()
+      }
+    },
+
     signUp() {
       // todo
+    },
+
+    resetData() {
+      this.u_nickname = ''
+      this.u_mail = ''
+      this.u_password = ''
+      this.u_password2 = ''
+      this.errorNickname = ''
+      this.errorEmail = ''
+      this.errorPassword = ''
+      this.errorPassword2 = ''
     }
   }
 }
@@ -106,7 +225,8 @@ export default {
 @import '@/theme/variables.scss';
 
 .component-wrapper {
-  margin-top: 180px;
+  margin-top: 100px;
+
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
@@ -119,8 +239,14 @@ export default {
   -webkit-box-shadow: 0px 0px 45px -7px rgba(0, 0, 0, 1);
   -moz-box-shadow: 0px 0px 45px -7px rgba(0, 0, 0, 1);
   box-shadow: 0px 0px 45px -7px rgba(0, 0, 0, 1);
+
+  @media only screen and (max-width: 768px) {
+    margin-top: 15px;
+  }
+
   img {
     width: 40%;
+    height: 40%;
     margin: 0px 50px 20px 50px;
     filter: invert(21%) sepia(5%) saturate(2878%) hue-rotate(346deg)
       brightness(104%) contrast(97%);
@@ -191,6 +317,36 @@ export default {
     &:hover {
       color: $vue-color;
       border-color: $vue-color;
+    }
+  }
+
+  .connexion-wrapper {
+    width: 100%;
+    li {
+      width: 75%;
+      margin: auto;
+
+      label {
+        width: 100%;
+        text-align: left;
+        display: block;
+        margin-bottom: 5px;
+      }
+
+      input {
+        width: 100%;
+      }
+      input[type='text'] {
+        margin-bottom: 5px;
+      }
+
+      input[type='password'] {
+        margin-bottom: 5px;
+      }
+
+      .login-btn {
+        margin-top: 15px;
+      }
     }
   }
 }
