@@ -68,7 +68,7 @@
             <span v-if="errorNickname">{{ errorNickname }}</span>
           </li>
           <li>
-            <label>Mail :</label>
+            <label>E-Mail :</label>
             <input v-model="u_mail" type="text" />
             <span v-if="errorEmail">{{ errorEmail }}</span>
           </li>
@@ -242,6 +242,7 @@ export default {
 
   @media only screen and (max-width: 768px) {
     margin-top: 15px;
+    width: 100%;
   }
 
   img {
@@ -290,9 +291,12 @@ export default {
       }
       input {
         width: 60%;
-        padding: 5px;
+        padding: 10px;
         border-radius: 3px;
         border: 1px solid;
+        -webkit-box-shadow: inset 0px 0px 14px -10px rgba(0, 0, 0, 0.75);
+        -moz-box-shadow: inset 0px 0px 14px -10px rgba(0, 0, 0, 0.75);
+        box-shadow: inset 0px 0px 14px -10px rgba(0, 0, 0, 0.75);
       }
 
       input[type='text'] {
@@ -335,6 +339,9 @@ export default {
 
       input {
         width: 100%;
+        -webkit-box-shadow: inset 0px 0px 14px -10px rgba(0, 0, 0, 0.75);
+        -moz-box-shadow: inset 0px 0px 14px -10px rgba(0, 0, 0, 0.75);
+        box-shadow: inset 0px 0px 14px -10px rgba(0, 0, 0, 0.75);
       }
       input[type='text'] {
         margin-bottom: 5px;
