@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import Head from 'vue-head'
 import Home from '@/views/Home'
+import VerificationMail from '@/views/UserVerification'
 import CheckLogin from '@/views/CheckLogin'
 import { isNil } from 'lodash'
 import store from '@/store'
@@ -40,7 +41,9 @@ const router = new Router({
       path: '/login',
       name: 'login',
       component: () =>
-        import(/* webpackChunkName: "client-chunk-login" */ '@/views/Login.vue'),
+        import(
+          /* webpackChunkName: "client-chunk-login" */ '@/views/Login.vue'
+        ),
       meta: {
         authNotRequired: true
       }
@@ -49,14 +52,26 @@ const router = new Router({
       path: '/products',
       name: 'products',
       component: () =>
-        import(/* webpackChunkName: "client-chunk-products" */ '@/views/Products.vue')
+        import(
+          /* webpackChunkName: "client-chunk-products" */ '@/views/Products.vue'
+        )
+    },
+    {
+      path: '/verification',
+      name: 'userVerification',
+      meta: {
+        authNotRequired: true
+      },
+      component: VerificationMail
     },
     {
       path: '/products/:id',
       name: 'product',
       props: true,
       component: () =>
-        import(/* webpackChunkName: "client-chunk-product-details" */ '@/views/Product.vue')
+        import(
+          /* webpackChunkName: "client-chunk-product-details" */ '@/views/Product.vue'
+        )
     },
     { path: '*', redirect: '/home' }
   ]

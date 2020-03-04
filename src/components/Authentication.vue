@@ -204,9 +204,38 @@ export default {
     },
 
     signUp() {
+      firebase
+        .auth()
+        .createUserWithEmailAndPassword(this.u_mail, this.u_password)
+        .catch(error => {
+          // Handle Errors here.
+          const errorCode = error.code
+          const errorMessage = error.message
+          console.log(`${errorCode} - ${errorMessage}`)
+
+          // ...
+        })
+        .then(() => {
+          this.sendEmail()
+        })
       // todo
     },
 
+    sendEmail() {
+      firebase
+        .auth()
+        .currentUser.sendEmailVerification()
+        .then(
+          () => {
+            // Email sent.
+            console.log('mail sent !')
+          },
+          error => {
+            console.log(error)
+            // An error happened.
+          }
+        )
+    },
     resetData() {
       this.u_nickname = ''
       this.u_mail = ''
