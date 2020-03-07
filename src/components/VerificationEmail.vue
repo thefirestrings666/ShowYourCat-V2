@@ -4,6 +4,8 @@
     <div class="spanner">
       <h4>Congratulation !</h4>
       <h4>Your account has been succesfully activated !</h4>
+      {{ this.$route.query.mode }}
+      {{ this.$route.query.oobCode }}
       <div data-test="login-btn" class="login-btn">
         Back Home !
       </div>
