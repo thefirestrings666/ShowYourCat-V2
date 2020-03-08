@@ -4,7 +4,7 @@
     <div class="main-wrapper">
       <router-view />
     </div>
-
+    <Footer></Footer>
     <new-content-available-toastr
       v-if="newContentAvailable"
       class="new-content-available-toastr"
@@ -21,12 +21,18 @@
 </template>
 <script>
 import NavBar from '@/components/NavBar'
+import Footer from '@/components/Footer'
 import NewContentAvailableToastr from '@/components/NewContentAvailableToastr'
 import AppleAddToHomeScreenModal from '@/components/AppleAddToHomeScreenModal'
 import { mapState, mapActions, mapGetters } from 'vuex'
 
 export default {
-  components: { NavBar, NewContentAvailableToastr, AppleAddToHomeScreenModal },
+  components: {
+    NavBar,
+    Footer,
+    NewContentAvailableToastr,
+    AppleAddToHomeScreenModal
+  },
   computed: {
     ...mapGetters('app', ['newContentAvailable']),
     ...mapState('app', ['showAddToHomeScreenModalForApple', 'refreshingApp'])
@@ -84,7 +90,7 @@ body {
       padding: 20px;
 
       .page-wrapper {
-        width: 60%;
+        width: 80%;
         margin: auto;
 
         @media screen and (max-width: 1000px) {

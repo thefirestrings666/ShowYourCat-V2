@@ -1,19 +1,24 @@
 <template>
   <div class="component-wrapper">
     <img src="@/assets/catface4.svg" />
+    <p>{{ errorMessage }}</p>
     <div v-if="v_spanner" class="spanner">
       <h4>Sign-in</h4>
       <ul>
         <li>
           <label>Mail :</label>
-          <input type="text" />
+          <input v-model="u_mail" type="text" />
         </li>
         <li>
           <label>Password :</label>
-          <input type="password" />
+          <input v-model="u_password" type="password" />
         </li>
         <li>
-          <div data-test="login-btn" class="login-btn" @click="loginByMail">
+          <div
+            data-test="login-btn"
+            class="login-btn"
+            @click="loginByMail(u_mail, u_password)"
+          >
             Sign-in
           </div>
         </li>
@@ -120,7 +125,8 @@ export default {
       errorNickname: '',
       errorEmail: '',
       errorPassword: '',
-      errorPassword2: ''
+      errorPassword2: '',
+      errorMessage: ''
     }
   },
   computed: {
@@ -147,9 +153,37 @@ export default {
         this.loginError = err
         this.setUser(null)
       }
+
+      const credential = firebase.auth.EmailAuthProvider.credential(
+        this.u_mail,
+        this.u_password
+      )
+
+      firebase
+        .auth()
+        .currentUser.linkWithCredential(credential)
+        .then(
+          usercred => {
+            const { user } = usercred
+            console.log('Account linking success', user)
+          },
+          error => {
+            console.log('Account linking error', error)
+          }
+        )
     },
-    loginByMail() {
-      // todo
+    loginByMail(email, password) {
+      firebase
+        .auth()
+        .signInWithEmailAndPassword(email, password)
+        .catch(error => {
+          // Handle Errors here.
+          const errorCode = error.code
+          const errorMessage = error.message
+          this.errorMessage = errorMessage
+          console.log(`${errorCode} - ${errorMessage}`)
+          // ...
+        })
     },
     signUp_access() {
       this.v_spanner = false
@@ -274,6 +308,12 @@ export default {
     width: 100%;
   }
 
+  p {
+    margin-top: 0px;
+    text-align: center;
+    color: red;
+    padding: 0px 5px;
+  }
   img {
     width: 40%;
     height: 40%;
@@ -292,6 +332,10 @@ export default {
     display: inline-block;
     vertical-align: top;
     min-width: 200px;
+
+    @media only screen and (max-width: 768px) {
+      width: 100%;
+    }
   }
 
   .separator {
@@ -326,6 +370,10 @@ export default {
         -webkit-box-shadow: inset 0px 0px 14px -10px rgba(0, 0, 0, 0.75);
         -moz-box-shadow: inset 0px 0px 14px -10px rgba(0, 0, 0, 0.75);
         box-shadow: inset 0px 0px 14px -10px rgba(0, 0, 0, 0.75);
+
+        @media only screen and (max-width: 768px) {
+          width: 70%;
+        }
       }
 
       input[type='text'] {

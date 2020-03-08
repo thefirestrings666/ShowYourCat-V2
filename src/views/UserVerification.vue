@@ -1,7 +1,6 @@
 <template>
   <div class="page-wrapper">
-    <VerificationEmail v-show="user !== undefined && !user && networkOnLine">
-    </VerificationEmail>
+    <VerificationEmail> </VerificationEmail>
   </div>
 </template>
 

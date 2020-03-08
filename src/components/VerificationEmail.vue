@@ -2,10 +2,10 @@
   <div class="component-wrapper">
     <img src="@/assets/catface4.svg" />
     <div class="spanner">
-      <h4>Congratulation !</h4>
-      <h4>Your account has been succesfully activated !</h4>
-      {{ this.$route.query.mode }}
-      {{ this.$route.query.oobCode }}
+      <h4>{{ h4_title }}</h4>
+      <h4>{{ h4_message }}</h4>
+      <p>{{ errorMessage }}</p>
+
       <div data-test="login-btn" class="login-btn">
         Back Home !
       </div>
@@ -14,9 +14,43 @@
 </template>
 
 <script>
+import firebase from 'firebase/app'
+import { mapMutations, mapActions } from 'vuex'
+
 export default {
-  computed: {},
-  methods: {}
+  data() {
+    return {
+      errorMessage: '',
+      h4_title: '',
+      h4_message: ''
+    }
+  },
+  created() {
+    this.activateAccount(this.$route.query.oobCode)
+  },
+  methods: {
+    activateAccount(action) {
+      firebase
+        .auth()
+        .applyActionCode(action)
+        .then(() => {
+          this.h4_title = 'Congratulation !'
+          this.h4_message = 'Your account has been succesfully activated !'
+        })
+        .catch(error => {
+          // Handle Errors here.
+
+          const errorMessage = error.message
+          this.h4_title = 'oops !'
+          this.errorMessage = errorMessage
+
+          // ...
+        })
+    },
+
+    ...mapMutations('authentication', ['setUser']),
+    ...mapActions('authentication', ['activateUser'])
+  }
 }
 </script>
 
