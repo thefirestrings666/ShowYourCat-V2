@@ -1,6 +1,10 @@
 <template>
   <div id="app">
-    <nav-bar></nav-bar>
+    <nav-bar
+      :coins="user && user_data.coins"
+      :xp="user && user_data.xp"
+      :level="user && user_data.level"
+    ></nav-bar>
     <div class="main-wrapper">
       <router-view />
     </div>
@@ -20,11 +24,11 @@
   </div>
 </template>
 <script>
+import { mapState, mapActions, mapGetters } from 'vuex'
 import NavBar from '@/components/NavBar'
 import Footer from '@/components/Footer'
 import NewContentAvailableToastr from '@/components/NewContentAvailableToastr'
 import AppleAddToHomeScreenModal from '@/components/AppleAddToHomeScreenModal'
-import { mapState, mapActions, mapGetters } from 'vuex'
 
 export default {
   components: {
@@ -35,7 +39,9 @@ export default {
   },
   computed: {
     ...mapGetters('app', ['newContentAvailable']),
-    ...mapState('app', ['showAddToHomeScreenModalForApple', 'refreshingApp'])
+    ...mapState('app', ['showAddToHomeScreenModalForApple', 'refreshingApp']),
+    ...mapState('authentication', ['user']),
+    ...mapState('userData', ['user_data'])
   },
   methods: mapActions('app', [
     'closeAddToHomeScreenModalForApple',

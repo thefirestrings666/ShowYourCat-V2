@@ -5,22 +5,22 @@
       <span class="site-name title-desktop">Show Your Cat</span>
       <span class="site-name title-mobile"></span>
     </router-link>
-    <div class="links">
+    <div v-if="isUserLoggedIn && networkOnLine" class="links">
       <nav class="nav-links">
-        <!-- <div class="nav-item">
-          <router-link to="/products">Products</router-link>
-        </div> -->
-        <!-- <div v-if="!isUserLoggedIn && networkOnLine" class="nav-item">
-          <router-link to="/login">Login</router-link>
-        </div> -->
-        <div
-          v-if="isUserLoggedIn && networkOnLine"
-          class="nav-item logout-item"
-          @click="logout"
-        >
-          <a>Logout</a>
+        <div class="user-data-wrapper">
+          <div>
+            <h5>XP</h5>
+            <p>{{ xp }}</p>
+          </div>
+          <div>
+            <h5>LVL</h5>
+            <p>{{ level }}</p>
+          </div>
+          <div>
+            <h5>coins</h5>
+            <p>{{ coins }}</p>
+          </div>
         </div>
-        <div v-if="!networkOnLine" class="nav-item offline-label">Offline</div>
       </nav>
 
       <img
@@ -28,6 +28,7 @@
         class="user-picture can-hide"
         :src="user.photoURL"
         alt="Avatar"
+        @click="logout"
       />
     </div>
   </header>
@@ -35,14 +36,36 @@
 
 <script>
 import firebase from 'firebase/app'
+// import UsersDB from '@/firebase/users-db'
 import { mapGetters, mapState } from 'vuex'
 
 export default {
+  props: {
+    xp: {
+      type: Number
+    },
+    level: {
+      type: Number
+    },
+    coins: {
+      type: Number
+    }
+  },
   computed: {
     ...mapGetters('authentication', ['isUserLoggedIn']),
     ...mapState('authentication', ['user']),
     ...mapState('app', ['networkOnLine', 'appTitle', 'appShortTitle'])
   },
+  // mounted: {
+  //   // listener() {
+  //   //   const UserDb = new UsersDB()
+  //   //   UserDb.collection('users')
+  //   //     .doc(this.user.id)
+  //   //     .onSnapshot(doc => {
+  //   //       console.log('Current data: ', doc.data())
+  //   //     })
+  //   // }
+  // },
   methods: {
     async logout() {
       await firebase.auth().signOut()
@@ -124,6 +147,25 @@ export default {
       display: flex;
       align-items: center;
       justify-content: center;
+
+      .user-data-wrapper {
+        display: flex;
+        position: absolute;
+
+        right: 45px;
+
+        div {
+          margin: 0px 10px;
+          text-align: center;
+
+          h5 {
+            margin: 0px;
+          }
+          p {
+            margin: 0px;
+          }
+        }
+      }
 
       .nav-item {
         position: relative;

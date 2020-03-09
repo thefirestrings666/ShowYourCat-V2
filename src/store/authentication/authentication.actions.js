@@ -1,10 +1,7 @@
 import firebase from 'firebase/app'
 import router from '@/router'
 import { isNil } from 'lodash'
-import {
-  createNewUserFromFirebaseAuthUser
-  // createNewUserDataFromUser
-} from '@/misc/helpers'
+import { createNewUserFromFirebaseAuthUser } from '@/misc/helpers'
 
 import UsersDB from '@/firebase/users-db'
 
@@ -20,7 +17,7 @@ export default {
       ? await createNewUserFromFirebaseAuthUser(firebaseAuthUser)
       : userFromFirebase
 
-    if (userFromFirebase) {
+    if (userFromFirebase && !user.emailVerified) {
       await userDb.update({
         ...userFromFirebase,
         emailVerified: firebaseAuthUser.emailVerified
@@ -29,16 +26,14 @@ export default {
 
     commit('setUser', user)
 
-    await firebase.auth().currentUser.reload()
+    // Initialise user
+    dispatch('userData/load_userData', user, { root: true })
 
-    await commit('activateUser', firebaseAuthUser.emailVerified)
-
-    dispatch('products/getUserProducts', null, { root: true })
-  },
-
-  activateUser: async ({ commit, state }) => {
-    console.log(state.user)
-    commit('activateUser', true)
+    // User activation
+    if (!user.emailVerified) {
+      await firebase.auth().currentUser.reload()
+      await commit('activateUser', firebaseAuthUser.emailVerified)
+    }
   },
 
   /**

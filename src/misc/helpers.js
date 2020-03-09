@@ -1,5 +1,4 @@
 import UsersDB from '@/firebase/users-db'
-import UserDataDB from '@/firebase/user-data-db'
 
 /**
  * Create new user from firebase auth user infos
@@ -14,20 +13,11 @@ export const createNewUserFromFirebaseAuthUser = async firebaseAuthUser => {
     displayName,
     photoURL,
     email,
-    emailVerified
+    emailVerified,
+    user_coins: 0,
+    user_level: 1,
+    user_xp: 0
   }
 
   return userDb.create(user, firebaseAuthUser.uid)
-}
-
-export const createNewUserDataFromUser = async userID => {
-  const UserDataDb = new UserDataDB()
-
-  const userData = {
-    coins: 0,
-    level: 1,
-    xp: 0
-  }
-
-  return UserDataDb.create(userData, userID.uid)
 }

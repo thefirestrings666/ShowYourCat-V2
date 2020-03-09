@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import authentication from './authentication'
+import userData from './userData'
 import app from './app'
 import products from './products'
 
@@ -12,6 +13,7 @@ export default new Vuex.Store({
   strict: process.env.NODE_ENV !== 'production',
   modules: {
     authentication,
+    userData,
     app,
     products
   }

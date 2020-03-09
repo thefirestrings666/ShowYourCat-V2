@@ -176,6 +176,7 @@ export default {
       firebase
         .auth()
         .signInWithEmailAndPassword(email, password)
+
         .catch(error => {
           // Handle Errors here.
           const errorCode = error.code
@@ -241,6 +242,14 @@ export default {
       firebase
         .auth()
         .createUserWithEmailAndPassword(this.u_mail, this.u_password)
+        .then(response => {
+          if (response) {
+            console.log(response)
+            response.updateProfile({
+              displayName: this.u_nickname
+            })
+          }
+        })
         .catch(error => {
           // Handle Errors here.
           const errorCode = error.code
