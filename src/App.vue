@@ -94,6 +94,7 @@ body {
     .main-wrapper {
       margin-top: 3.6rem;
       padding: 20px;
+      margin-bottom: 3.6rem;
 
       .page-wrapper {
         width: 80%;

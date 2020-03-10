@@ -87,6 +87,13 @@
             <input v-model="u_password2" type="password" />
             <span v-if="errorPassword2">{{ errorPassword2 }}</span>
           </li>
+          <li></li>
+          <li>
+            <label>Import your cat :</label>
+
+            <span v-if="errorPassword2">{{ errorPassword2 }}</span>
+            <base-image-input v-model="imageFile" />
+          </li>
           <li>
             <div
               data-test="login-btn"
@@ -109,8 +116,12 @@
 import firebase from 'firebase/app'
 import { desktop as isDekstop } from 'is_js'
 import { mapState, mapGetters, mapMutations } from 'vuex'
+import BaseImageInput from './internComponents/BaseImageInput.vue'
 
 export default {
+  components: {
+    BaseImageInput
+  },
   data() {
     return {
       v_spanner: true,
@@ -126,7 +137,9 @@ export default {
       errorEmail: '',
       errorPassword: '',
       errorPassword2: '',
-      errorMessage: ''
+      errorMessage: '',
+
+      imageFile: null
     }
   },
   computed: {
@@ -244,8 +257,7 @@ export default {
         .createUserWithEmailAndPassword(this.u_mail, this.u_password)
         .then(response => {
           if (response) {
-            console.log(response)
-            response.updateProfile({
+            firebase.auth().currentUser.updateProfile({
               displayName: this.u_nickname
             })
           }
