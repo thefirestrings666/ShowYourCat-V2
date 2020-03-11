@@ -87,7 +87,7 @@
             <input v-model="u_password2" type="password" />
             <span v-if="errorPassword2">{{ errorPassword2 }}</span>
           </li>
-          <li></li>
+
           <li>
             <label>Import your cat :</label>
 

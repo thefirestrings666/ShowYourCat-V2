@@ -41,7 +41,9 @@ export default {
   padding: 0.7rem 1.5rem 0.7rem 0.7rem;
   line-height: 2.2rem;
   text-align: right;
-
+  @media (max-width: 500px) {
+    display: none;
+  }
   a {
     display: flex;
     align-items: right;

@@ -25,6 +25,7 @@ export default {
   color: white;
   display: inline-block;
   border-radius: 4px;
+  z-index: 1;
 
   .refresh-btn {
     text-decoration: underline;
