@@ -36,6 +36,26 @@ export default {
     }
   },
 
+  updateUserDetails: async id => {
+    const userDb = new UsersDB()
+    // const userFromFirebase = await userDb.read(rootState.authentication.user.id)
+    console.log(id)
+    const userFromFirebase = await userDb.read(id)
+    await userDb.update({
+      ...userFromFirebase,
+      displayName: firebase.auth().currentUser.displayName
+    })
+  },
+  updateUserPictureLink: async ({ rootState }) => {
+    const userDb = new UsersDB()
+    const userFromFirebase = await userDb.read(rootState.authentication.user.id)
+    await userDb.update({
+      ...userFromFirebase,
+
+      photoURL: firebase.auth().currentUser.photoURL
+    })
+  },
+
   /**
    * Callback fired when user logout
    */

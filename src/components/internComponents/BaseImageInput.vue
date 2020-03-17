@@ -11,19 +11,25 @@
     />
 
     <cropper
-      v-if="imageData"
+      v-if="imageData && !v_preview"
       ref="cropper"
       classname="cropper"
       image-classname="bPencil"
+      area-classname="areaClass"
       :src="imageData"
       :canvas="true"
       :image-restriction="'stencil'"
       :stencil-component="CircleStencil"
       :stencil-props="{
-        imageClassname: 'bPencil'
+        imageClassname: 'bPencil',
+        areaClassname: 'areaClass'
       }"
     ></cropper>
-    <div v-if="imageData" class="login-btn" @click="cropPreview">
+    <div v-if="v_preview" class="cropper"><img :src="imageData" /></div>
+    <div v-if="v_preview" class="login-btn" @click="resetComp">
+      Try again !
+    </div>
+    <div v-if="imageData && !v_preview" class="login-btn" @click="cropPreview">
       Crop!
     </div>
   </div>
@@ -40,7 +46,13 @@ export default {
     return {
       imageData: null,
       CircleStencil,
-      coordinates: null
+      coordinates: {
+        width: 0,
+        height: 0,
+        left: 0,
+        top: 0
+      },
+      v_preview: false
     }
   },
   methods: {
@@ -60,26 +72,42 @@ export default {
         this.reloadImg += 1
       }
     },
-    change({ coordinates, canvas }) {
-      console.log(coordinates, canvas)
+    // change({ coordinates, canvas }) {
+    //   console.log(coordinates, canvas)
+    // },
+    roundEdges(canvas) {
+      const context = canvas.getContext('2d')
+      const { width } = canvas
+      const { height } = canvas
+      context.globalCompositeOperation = 'destination-in'
+      context.beginPath()
+      context.scale(1, height / width)
+      context.arc(width / 2, width / 2, width / 2, 0, Math.PI * 2)
+      context.closePath()
+      context.fill()
+      return canvas
     },
     cropPreview() {
-      const { coordinates, canvas } = this.$refs.cropper.getResult()
-      this.coordinates = coordinates
-      console.log(canvas)
-      // You able to do different manipulations at a canvas
-      // but there we just get a cropped image
-      this.imageData = canvas.toDataURL()
+      const { canvas } = this.$refs.cropper.getResult()
+
+      this.$emit('img_selected', this.roundEdges(canvas).toDataURL())
+      this.v_preview = true
+      this.imageData = this.roundEdges(canvas).toDataURL()
+    },
+    resetComp() {
+      this.imageData = null
+      this.v_preview = false
     }
   }
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+@import '@/theme/variables.scss';
 .base-image-input {
   display: block;
-  width: 300px;
-  height: 300px;
+  width: 250px;
+  height: 250px;
   cursor: pointer;
   background-size: cover;
   background-position: center center;
@@ -105,8 +133,12 @@ export default {
   display: none;
 }
 .cropper {
-  height: 6000px;
-  background: #ddd;
+  height: 250px;
+  background: transparent;
+
+  img {
+    width: 100%;
+  }
 }
 .login-btn {
   margin: 5px;
@@ -119,5 +151,9 @@ export default {
 }
 .bPencil {
   opacity: 0.2;
+}
+
+.areaClass {
+  background: red;
 }
 </style>

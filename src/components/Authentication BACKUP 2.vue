@@ -115,7 +115,7 @@
 <script>
 import firebase from 'firebase/app'
 import { desktop as isDekstop } from 'is_js'
-import { mapState, mapGetters, mapMutations, mapActions } from 'vuex'
+import { mapState, mapGetters, mapMutations } from 'vuex'
 import BaseImageInput from './internComponents/BaseImageInput.vue'
 
 export default {
@@ -149,10 +149,6 @@ export default {
   },
   methods: {
     ...mapMutations('authentication', ['setUser']),
-    ...mapActions('authentication', [
-      'updateUserDetails',
-      'updateUserPictureLink'
-    ]),
     async login() {
       this.loginError = null
       const provider = new firebase.auth.GoogleAuthProvider()
@@ -262,32 +258,33 @@ export default {
         .then(response => {
           if (response) {
             const file = this.u_picture
-            if (file) {
-              firebase
-                .storage()
-                .ref(`avatars/${firebase.auth().currentUser.uid}`)
-                .putString(file, 'data_url') // Saving picture
-                .then(() => {
-                  firebase
-                    .storage()
-                    .ref(`avatars/${firebase.auth().currentUser.uid}`)
-                    .getDownloadURL()
-                    .then(downURL => {
-                      firebase.auth().currentUser.updateProfile({
-                        photoURL: downURL
-                      })
-                      // this.updateUserPictureLink()
-                    })
-                })
-            }
-
             firebase
-              .auth()
-              .currentUser.updateProfile({
-                displayName: this.u_nickname
+              .storage()
+              .ref(`avatars/${firebase.auth().currentUser.uid}`)
+              .putString(file, 'data_url') // Saving picture
+              .then(snapshot => {
+                console.log(snapshot) // user picture saved
               })
+
               .then(() => {
-                this.updateUserDetails(firebase.auth().currentUser.uid)
+                firebase
+                  .storage()
+                  .ref(`avatars/${firebase.auth().currentUser.uid}`)
+                  .getDownloadURL()
+                  .then(() => {
+                    firebase
+                      .auth()
+                      .currentUser.updateProfile({
+                        displayName: 'this.u_nickname',
+                        photoURL: 'msg'
+                      })
+                      .then(() => {
+                        console.log('Success')
+                      })
+                      .catch(errorMessage => {
+                        console.log(errorMessage)
+                      })
+                  })
               })
           }
         })
