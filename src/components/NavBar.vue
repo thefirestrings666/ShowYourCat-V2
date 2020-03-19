@@ -3,7 +3,7 @@
     <router-link to="/home">
       <img alt="logo-bento" class="logo" src="@/assets/catface4.svg" />
       <span class="site-name title-desktop">Show Your Cat</span>
-      <span class="site-name title-mobile"></span>
+      <span class="site-name title-mobile">Show Your Cat</span>
     </router-link>
     <div v-if="isUserLoggedIn && networkOnLine" class="links">
       <nav class="nav-links">
@@ -22,15 +22,14 @@
           </div>
         </div>
       </nav>
-
-      <img
-        v-if="isUserLoggedIn && networkOnLine"
-        class="user-picture can-hide"
-        :src="user.photoURL"
-        alt="Avatar"
-        @click="logout"
-      />
     </div>
+    <img
+      v-if="isUserLoggedIn && networkOnLine"
+      class="user-picture"
+      :src="user.photoURL"
+      alt="Avatar"
+      @click="logout"
+    />
   </header>
 </template>
 
@@ -79,6 +78,7 @@ export default {
 
 .navbar {
   position: absolute;
+  display: flex;
   top: 0;
   left: 0;
   z-index: 20;
@@ -87,12 +87,12 @@ export default {
   background-color: $navbar-color;
   box-sizing: border-box;
   border-bottom: 1px solid #eaecef;
-  padding: 0.7rem 1.5rem 0.7rem 0.7rem;
   line-height: 2.2rem;
 
   a {
     display: flex;
     align-items: center;
+    margin: 10px;
   }
 
   .title-desktop {
@@ -104,7 +104,7 @@ export default {
   }
 
   @media (max-width: 500px) {
-    padding: 0.7rem 0.7rem;
+    // padding: 0.7rem 0.7rem;
 
     .can-hide {
       display: none;
@@ -116,6 +116,8 @@ export default {
 
     .title-mobile {
       display: block;
+      margin: auto;
+      position: relative;
     }
   }
 
@@ -151,8 +153,8 @@ export default {
       .user-data-wrapper {
         display: flex;
         position: absolute;
-
-        right: 45px;
+        top: -20px;
+        right: 35px;
 
         div {
           margin: 0px 10px;
@@ -215,9 +217,12 @@ export default {
   }
 
   .user-picture {
-    max-height: 32px;
+    position: absolute;
+    max-height: 45px;
     margin-left: 1.5rem;
     border-radius: 50%;
+    top: 5px;
+    right: 10px;
   }
 
   .offline-label {

@@ -120,7 +120,8 @@ export default {
       width: 100%;
     }
 
-    h1 {
+    h1,
+    h4 {
       text-align: center;
     }
   }

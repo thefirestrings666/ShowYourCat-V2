@@ -6,12 +6,10 @@ import UsersDB from '@/firebase/users-db'
 // eslint-disable-next-line
 export const createNewUserFromFirebaseAuthUser = async firebaseAuthUser => {
   const providerData = firebaseAuthUser.providerData[0]
-  const { displayName, photoURL, email } = providerData
+  const { email } = providerData
   const { emailVerified } = firebaseAuthUser
   const userDb = new UsersDB()
   const user = {
-    displayName,
-    photoURL,
     email,
     emailVerified,
     user_coins: 0,

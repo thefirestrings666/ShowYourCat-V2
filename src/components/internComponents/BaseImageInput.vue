@@ -7,7 +7,8 @@
       ref="fileInput"
       class="file-input"
       type="file"
-      @input="onSelectFile"
+      accept="image/*"
+      @change="onSelectFile"
     />
 
     <cropper
@@ -16,8 +17,8 @@
       classname="cropper"
       image-classname="bPencil"
       area-classname="areaClass"
+      :wheel-resize="false"
       :src="imageData"
-      :canvas="true"
       :image-restriction="'stencil'"
       :stencil-component="CircleStencil"
       :stencil-props="{
@@ -26,10 +27,10 @@
       }"
     ></cropper>
     <div v-if="v_preview" class="cropper"><img :src="imageData" /></div>
-    <div v-if="v_preview" class="login-btn" @click="resetComp">
+    <div v-if="v_preview" class="login-btn top-margin" @click="resetComp">
       Try again !
     </div>
-    <div v-if="imageData && !v_preview" class="login-btn" @click="cropPreview">
+    <div v-if="imageData && !v_preview" class="login-btn " @click="cropPreview">
       Crop!
     </div>
   </div>
@@ -45,6 +46,8 @@ export default {
   data() {
     return {
       imageData: null,
+      imageDataComplete: false,
+
       CircleStencil,
       coordinates: {
         width: 0,
@@ -55,21 +58,25 @@ export default {
       v_preview: false
     }
   },
+  beforeDestroy() {
+    if (this.imageData && !this.imageDataComplete) {
+      this.cropPreview()
+    }
+  },
   methods: {
     chooseImage() {
       this.$refs.fileInput.click()
     },
-    onSelectFile() {
-      const input = this.$refs.fileInput
-      const { files } = input
-      if (files && files[0]) {
+    onSelectFile(returned) {
+      const input = returned.target
+      // const { files } = input
+      if (input.files && input.files[0]) {
         const reader = new FileReader()
         reader.onload = e => {
           this.imageData = e.target.result
         }
-        reader.readAsDataURL(files[0])
-        this.$emit('input', files[0])
-        this.reloadImg += 1
+        reader.readAsDataURL(input.files[0])
+        this.$emit('input', input.files[0])
       }
     },
     // change({ coordinates, canvas }) {
@@ -93,6 +100,7 @@ export default {
       this.$emit('img_selected', this.roundEdges(canvas).toDataURL())
       this.v_preview = true
       this.imageData = this.roundEdges(canvas).toDataURL()
+      this.imageDataComplete = true
     },
     resetComp() {
       this.imageData = null
@@ -138,6 +146,8 @@ export default {
 
   img {
     width: 100%;
+    -webkit-filter: drop-shadow(0px 0px 5px #222);
+    filter: drop-shadow(0px 0px 5px 3px #222);
   }
 }
 .login-btn {
@@ -155,5 +165,9 @@ export default {
 
 .areaClass {
   background: red;
+}
+
+.top-margin {
+  margin-top: 15px;
 }
 </style>

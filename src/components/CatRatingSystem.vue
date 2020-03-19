@@ -35,7 +35,7 @@ export default {
 @import '@/theme/variables.scss';
 
 .component-wrapper {
-  margin: 10px;
+  margin: auto;
   display: flex;
   flex-wrap: wrap;
   justify-content: center;

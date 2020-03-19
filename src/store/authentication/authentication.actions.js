@@ -36,24 +36,26 @@ export default {
     }
   },
 
-  updateUserDetails: async id => {
+  updateUserDetails: async ({ commit }, id) => {
     const userDb = new UsersDB()
-    // const userFromFirebase = await userDb.read(rootState.authentication.user.id)
-    console.log(id)
     const userFromFirebase = await userDb.read(id)
     await userDb.update({
       ...userFromFirebase,
       displayName: firebase.auth().currentUser.displayName
     })
+
+    commit('setUserDetails', firebase.auth().currentUser.displayName)
   },
-  updateUserPictureLink: async ({ rootState }) => {
+
+  updateUserPictureLink: async ({ commit }, id) => {
+    console.log(id)
     const userDb = new UsersDB()
-    const userFromFirebase = await userDb.read(rootState.authentication.user.id)
+    const userFromFirebase = await userDb.read(id)
     await userDb.update({
       ...userFromFirebase,
-
       photoURL: firebase.auth().currentUser.photoURL
     })
+    commit('setUserPictureLink', firebase.auth().currentUser.photoURL)
   },
 
   /**

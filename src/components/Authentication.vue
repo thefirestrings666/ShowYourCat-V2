@@ -69,23 +69,29 @@
           <h4>Sign-up</h4>
           <li>
             <label>Nickname :</label>
-            <input v-model="u_nickname" type="text" />
-            <span v-if="errorNickname">{{ errorNickname }}</span>
+            <input v-model="u_nickname" type="text" @change="checkSpace" />
+            <span v-if="errorNickname" class="error-tab">{{
+              errorNickname
+            }}</span>
           </li>
           <li>
             <label>E-Mail :</label>
             <input v-model="u_mail" type="text" />
-            <span v-if="errorEmail">{{ errorEmail }}</span>
+            <span v-if="errorEmail" class="error-tab">{{ errorEmail }}</span>
           </li>
           <li>
             <label>Password :</label>
             <input v-model="u_password" type="password" />
-            <span v-if="errorPassword">{{ errorPassword }}</span>
+            <span v-if="errorPassword" class="error-tab">{{
+              errorPassword
+            }}</span>
           </li>
           <li>
             <label>Verify password :</label>
             <input v-model="u_password2" type="password" />
-            <span v-if="errorPassword2">{{ errorPassword2 }}</span>
+            <span v-if="errorPassword2" class="error-tab">{{
+              errorPassword2
+            }}</span>
           </li>
 
           <li>
@@ -114,6 +120,7 @@
 
 <script>
 import firebase from 'firebase/app'
+import downscale from 'downscale'
 import { desktop as isDekstop } from 'is_js'
 import { mapState, mapGetters, mapMutations, mapActions } from 'vuex'
 import BaseImageInput from './internComponents/BaseImageInput.vue'
@@ -210,7 +217,9 @@ export default {
       this.v_spanner = true
       this.resetData()
     },
-
+    checkSpace() {
+      this.u_nickname = this.u_nickname.split(' ').join('')
+    },
     signUp_validation() {
       // Function to validate Sign-Up form fields
 
@@ -255,13 +264,14 @@ export default {
       }
     },
 
-    signUp() {
+    async signUp() {
       firebase
         .auth()
         .createUserWithEmailAndPassword(this.u_mail, this.u_password)
         .then(response => {
           if (response) {
             const file = this.u_picture
+
             if (file) {
               firebase
                 .storage()
@@ -273,10 +283,33 @@ export default {
                     .ref(`avatars/${firebase.auth().currentUser.uid}`)
                     .getDownloadURL()
                     .then(downURL => {
-                      firebase.auth().currentUser.updateProfile({
-                        photoURL: downURL
-                      })
-                      // this.updateUserPictureLink()
+                      firebase
+                        .auth()
+                        .currentUser.updateProfile({
+                          photoURL: downURL
+                        })
+                        .then(() => {
+                          this.updateUserPictureLink(
+                            firebase.auth().currentUser.uid
+                          )
+                        })
+                    })
+                })
+            } else {
+              firebase
+                .storage()
+                .ref('avatars/nopicture.png')
+                .getDownloadURL()
+                .then(downURL => {
+                  firebase
+                    .auth()
+                    .currentUser.updateProfile({
+                      photoURL: downURL
+                    })
+                    .then(() => {
+                      this.updateUserPictureLink(
+                        firebase.auth().currentUser.uid
+                      )
                     })
                 })
             }
@@ -296,6 +329,7 @@ export default {
           const errorCode = error.code
           const errorMessage = error.message
           console.log(`${errorCode} - ${errorMessage}`)
+          this.errorEmail = errorMessage
 
           // ...
         })
@@ -312,7 +346,6 @@ export default {
         .then(
           () => {
             // Email sent.
-            console.log('mail sent !')
           },
           error => {
             console.log(error)
@@ -332,7 +365,9 @@ export default {
     },
     updateUserPicture(value) {
       this.u_picture = value
-      console.log(this.u_picture)
+      downscale(value, 200, 200, { quality: 1 }).then(dataV => {
+        this.u_picture = dataV
+      })
     }
   }
 }
@@ -480,6 +515,13 @@ export default {
 
       input[type='password'] {
         margin-bottom: 5px;
+      }
+
+      .error-tab {
+        font-size: 0.8em;
+        width: 100%;
+        display: block;
+        color: red;
       }
 
       .login-btn {
