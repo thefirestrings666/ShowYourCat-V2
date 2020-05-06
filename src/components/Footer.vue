@@ -29,11 +29,6 @@ export default {
 @import '@/theme/variables.scss';
 
 .navbar {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  z-index: 20;
-  right: 0;
   height: $navbar-height;
   background-color: $navbar-color;
   box-sizing: border-box;
@@ -41,6 +36,7 @@ export default {
   padding: 0.7rem 1.5rem 0.7rem 0.7rem;
   line-height: 2.2rem;
   text-align: right;
+  width: 100%;
   @media (max-width: 500px) {
     display: none;
   }

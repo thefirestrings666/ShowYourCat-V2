@@ -5,10 +5,11 @@
       <h4>{{ h4_title }}</h4>
       <h4>{{ h4_message }}</h4>
       <p>{{ errorMessage }}</p>
-
-      <div data-test="login-btn" class="login-btn">
-        Back Home !
-      </div>
+      <router-link to="/home">
+        <div data-test="login-btn" class="login-btn">
+          Back Home !
+        </div>
+      </router-link>
     </div>
   </div>
 </template>

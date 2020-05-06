@@ -2,9 +2,20 @@
   <header class="navbar" :class="{ offline: !networkOnLine }">
     <router-link to="/home">
       <img alt="logo-bento" class="logo" src="@/assets/catface4.svg" />
-      <span class="site-name title-desktop">Show Your Cat</span>
-      <span class="site-name title-mobile">Show Your Cat</span>
+
+      <!-- <span class="site-name title-desktop">Show Your Cat</span>
+      <span class="site-name title-mobile">Show Your Cat</span> -->
     </router-link>
+    <div v-if="isUserLoggedIn && networkOnLine" class="logo-top-container">
+      <img
+        alt="logo-bento"
+        class="logo-middle-connected"
+        src="@/assets/logotop.svg"
+      />
+    </div>
+    <div v-else class="logo-top-container">
+      <img alt="logo-bento" class="logo-middle" src="@/assets/logotop.svg" />
+    </div>
     <div v-if="isUserLoggedIn && networkOnLine" class="links">
       <nav class="nav-links">
         <div class="user-data-wrapper">
@@ -55,16 +66,7 @@ export default {
     ...mapState('authentication', ['user']),
     ...mapState('app', ['networkOnLine', 'appTitle', 'appShortTitle'])
   },
-  // mounted: {
-  //   // listener() {
-  //   //   const UserDb = new UsersDB()
-  //   //   UserDb.collection('users')
-  //   //     .doc(this.user.id)
-  //   //     .onSnapshot(doc => {
-  //   //       console.log('Current data: ', doc.data())
-  //   //     })
-  //   // }
-  // },
+
   methods: {
     async logout() {
       await firebase.auth().signOut()
@@ -77,17 +79,18 @@ export default {
 @import '@/theme/variables.scss';
 
 .navbar {
-  position: absolute;
+  //  position: absolute;
   display: flex;
-  top: 0;
-  left: 0;
+  //  top: 0;
+  //  left: 0;
   z-index: 20;
-  right: 0;
+  //  right: 0;
   height: $navbar-height;
   background-color: $navbar-color;
   box-sizing: border-box;
   border-bottom: 1px solid #eaecef;
-  line-height: 2.2rem;
+  line-height: 1.55rem;
+  width: 100%;
 
   a {
     display: flex;
@@ -115,7 +118,7 @@ export default {
     }
 
     .title-mobile {
-      display: block;
+      display: none;
       margin: auto;
       position: relative;
     }
@@ -134,6 +137,34 @@ export default {
     filter: invert(21%) sepia(5%) saturate(2878%) hue-rotate(346deg)
       brightness(104%) contrast(97%);
   }
+  .logo-top-container {
+    width: 100%;
+    position: absolute;
+    top: 10px;
+
+    .logo-middle {
+      display: block;
+      position: relative;
+      margin: auto;
+      filter: invert(21%) sepia(5%) saturate(2878%) hue-rotate(346deg)
+        brightness(104%) contrast(97%);
+    }
+
+    .logo-middle-connected {
+      display: none;
+      position: relative;
+      margin: auto;
+      filter: invert(21%) sepia(5%) saturate(2878%) hue-rotate(346deg)
+        brightness(104%) contrast(97%);
+
+      @media screen and (min-width: 600px) {
+        display: block;
+      }
+      @media screen and (min-width: 1000px) {
+        display: block;
+      }
+    }
+  }
 
   .links {
     padding-left: 1.5rem;
@@ -142,7 +173,7 @@ export default {
     font-size: 0.9rem;
     position: absolute;
     right: 1.5rem;
-    top: 0.7rem;
+    top: 0.2rem;
     display: flex;
 
     .nav-links {
@@ -153,12 +184,17 @@ export default {
       .user-data-wrapper {
         display: flex;
         position: absolute;
-        top: -20px;
+        top: 0px;
         right: 35px;
 
         div {
-          margin: 0px 10px;
           text-align: center;
+          display: flex;
+          flex-direction: column;
+          min-width: 30px;
+          align-content: flex-start;
+          border-right: 1px solid #2c3e50;
+          padding: 0px 10px;
 
           h5 {
             margin: 0px;
@@ -223,6 +259,7 @@ export default {
     border-radius: 50%;
     top: 5px;
     right: 10px;
+    cursor: pointer;
   }
 
   .offline-label {

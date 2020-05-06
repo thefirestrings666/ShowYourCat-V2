@@ -6,7 +6,19 @@
 	 xml:space="preserve">
 <g id="Calque_2">
 </g>
-<circle fill="none" stroke="#4D4D4D" stroke-width="13" stroke-miterlimit="10" cx="173.334" cy="189.833" r="136.5"/>
-<image overflow="visible" width="2000" height="2000" xlink:href="C:\Users\thefi\Pictures\Antu_folder-camera.svg.png"  transform="matrix(0.0968 0 0 0.0968 76.5005 93)">
+<g>
+	<defs>
+		<circle id="SVGID_1_" cx="173.334" cy="189.833" r="136.5"/>
+	</defs>
+	<clipPath id="SVGID_2_">
+		<use xlink:href="#SVGID_1_"  overflow="visible"/>
+	</clipPath>
+	
+		<circle clip-path="url(#SVGID_2_)" fill="#4D4D4D" stroke="#4D4D4D" stroke-width="13" stroke-miterlimit="10" cx="173.334" cy="308.167" r="94.5"/>
+</g>
+<image overflow="visible" width="2000" height="2000" xlink:href="C:\Users\thefi\Pictures\Antu_folder-camera.svg.png"  transform="matrix(0.0968 0 0 0.0968 403.1675 -2.3335)">
 </image>
+<path fill="none" enable-background="new    " d="z"/>
+<circle fill="#4E4D4D" stroke="#4D4D4D" stroke-width="13" stroke-miterlimit="10" cx="173.334" cy="142" r="45.834"/>
+<circle fill="none" stroke="#4D4D4D" stroke-width="13" stroke-miterlimit="10" cx="173.334" cy="189.833" r="136.5"/>
 </svg>

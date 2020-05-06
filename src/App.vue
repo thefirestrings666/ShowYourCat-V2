@@ -8,7 +8,8 @@
     <div class="main-wrapper">
       <router-view />
     </div>
-    <Footer></Footer>
+    <PhotoUploader></PhotoUploader>
+    <Footer class="footer"></Footer>
     <new-content-available-toastr
       v-if="newContentAvailable"
       class="new-content-available-toastr"
@@ -27,6 +28,7 @@
 import { mapState, mapActions, mapGetters } from 'vuex'
 import NavBar from '@/components/NavBar'
 import Footer from '@/components/Footer'
+// import PhotoUploader from '@/components/internComponents/photoUploader'
 import NewContentAvailableToastr from '@/components/NewContentAvailableToastr'
 import AppleAddToHomeScreenModal from '@/components/AppleAddToHomeScreenModal'
 
@@ -36,6 +38,7 @@ export default {
     Footer,
     NewContentAvailableToastr,
     AppleAddToHomeScreenModal
+    // PhotoUploader
   },
   computed: {
     ...mapGetters('app', ['newContentAvailable']),
@@ -53,9 +56,7 @@ export default {
 <style lang="scss">
 body {
   margin: 0;
-  background-image: url('../src/assets/background.jpg');
-  background-repeat: no-repeat;
-  background-attachment: fixed;
+  background: url('../src/assets/background.jpg') no-repeat fixed center;
   background-size: cover;
   background-position: top;
   -webkit-font-smoothing: antialiased;
@@ -72,6 +73,15 @@ body {
     -moz-osx-font-smoothing: grayscale;
     font-size: 16px;
     color: #2c3e50;
+    display: grid;
+    grid-template-rows: 3.6rem auto 3.6rem 3.6rem;
+    min-height: 100vh;
+    align-items: center;
+    justify-items: center;
+
+    @media (max-width: 500px) {
+      grid-template-rows: 3.6rem auto;
+    }
 
     .new-content-available-toastr {
       position: absolute;
@@ -92,18 +102,14 @@ body {
     }
 
     .main-wrapper {
-      margin-top: 3.6rem;
-      padding: 20px;
-      margin-bottom: 3.6rem;
-
       .page-wrapper {
-        width: 80%;
-        margin: auto;
-
         @media screen and (max-width: 1000px) {
           width: 100%;
         }
       }
+    }
+    .footer {
+      // dfdf
     }
   }
 }

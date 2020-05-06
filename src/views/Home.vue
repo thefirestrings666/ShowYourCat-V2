@@ -1,14 +1,16 @@
 <template>
-  <div v-if="isUserLoggedIn" key="user.emailVerified" class="page-wrapper">
+  <div v-if="user" key="user.emailVerified" class="page-wrapper">
     <CatRatingSystem v-if="user.emailVerified"> </CatRatingSystem>
     <div v-else class="component-wrapper">
       <img alt="logo-bento" class="logo" src="@/assets/catface4.svg" />
       <h4>Please activate hour account, check your mailbox !</h4>
     </div>
   </div>
-  <div v-else class="page-wrapper">
-    <authentication v-show="user !== undefined && !user && networkOnLine">
-    </authentication>
+  <div v-else-if="user === null" class="page-wrapper">
+    <authentication> </authentication>
+  </div>
+  <div v-else-if="user === undefined" class="page-wrapper">
+    <h1>Loading....</h1>
   </div>
 </template>
 
@@ -21,6 +23,9 @@ export default {
   components: {
     authentication,
     CatRatingSystem
+  },
+  data() {
+    return {}
   },
   head() {
     return {
@@ -49,15 +54,15 @@ export default {
 @import '@/theme/variables.scss';
 
 .page-wrapper {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  align-items: flex-start;
+  // display: flex;
+  // flex-direction: row;
+  // justify-content: center;
+  // align-items: center;
+  // align-items: flex-start;
 
-  @media only screen and (max-width: 768px) {
-    flex-direction: column;
-  }
+  // @media only screen and (max-width: 768px) {
+  //   flex-direction: column;
+  // }
 
   .logo {
     width: 40%;
@@ -97,32 +102,6 @@ export default {
     &:hover {
       color: $vue-color;
       border-color: $vue-color;
-    }
-  }
-
-  .component-wrapper {
-    margin-top: 20px;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    width: 75%;
-    max-width: 600px;
-    padding: 15px 0px;
-    border: 1px solid;
-    border-radius: 3px;
-    background-color: rgba(255, 255, 255, 0.9);
-    -webkit-box-shadow: 0px 0px 45px -7px rgba(0, 0, 0, 1);
-    -moz-box-shadow: 0px 0px 45px -7px rgba(0, 0, 0, 1);
-    box-shadow: 0px 0px 45px -7px rgba(0, 0, 0, 1);
-
-    @media only screen and (max-width: 768px) {
-      margin-top: 15px;
-      width: 100%;
-    }
-
-    h1,
-    h4 {
-      text-align: center;
     }
   }
 }

@@ -7,11 +7,21 @@
       <ul>
         <li>
           <label>Mail :</label>
-          <input v-model="u_mail" type="text" />
+          <input
+            id="email"
+            v-model="u_mail"
+            type="text"
+            autocomplete="email"
+            @keyup.enter="loginByMail(u_mail, u_password)"
+          />
         </li>
         <li>
           <label>Password :</label>
-          <input v-model="u_password" type="password" />
+          <input
+            v-model="u_password"
+            type="password"
+            @keyup.enter="loginByMail(u_mail, u_password)"
+          />
         </li>
         <li>
           <div
@@ -31,33 +41,18 @@
       <h4>With socials</h4>
       <ul>
         <li>
-          <div
-            v-show="user !== undefined && !user && networkOnLine"
-            data-test="login-btn"
-            class="login-btn"
-            @click="login"
-          >
+          <div data-test="login-btn" class="login-btn" @click="login">
             Login with google
           </div>
         </li>
         <li>
-          <div
-            v-show="user !== undefined && !user && networkOnLine"
-            data-test="login-btn"
-            class="login-btn"
-            @click="loginByMail"
-          >
+          <div data-test="login-btn" class="login-btn" @click="loginByMail">
             Login with Facebook
           </div>
         </li>
         <li>
           <h4>or</h4>
-          <div
-            v-show="user !== undefined && !user && networkOnLine"
-            data-test="login-btn"
-            class="login-btn"
-            @click="signUp_access"
-          >
+          <div data-test="login-btn" class="login-btn" @click="signUp_access">
             Sign-up !
           </div>
         </li>
@@ -67,6 +62,7 @@
       <form>
         <ul>
           <h4>Sign-up</h4>
+
           <li>
             <label>Nickname :</label>
             <input v-model="u_nickname" type="text" @change="checkSpace" />
@@ -128,6 +124,9 @@ import BaseImageInput from './internComponents/BaseImageInput.vue'
 export default {
   components: {
     BaseImageInput
+  },
+  props: {
+    myMessage: String
   },
   data() {
     return {
@@ -212,6 +211,7 @@ export default {
     },
     signUp_access() {
       this.v_spanner = false
+      this.errorMessage = ''
     },
     sigUp_back() {
       this.v_spanner = true
@@ -377,12 +377,9 @@ export default {
 @import '@/theme/variables.scss';
 
 .component-wrapper {
-  margin: auto;
-
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  width: 75%;
   max-width: 600px;
   padding: 15px 0px;
   border: 1px solid;
@@ -391,16 +388,18 @@ export default {
   -webkit-box-shadow: 0px 0px 45px -7px rgba(0, 0, 0, 1);
   -moz-box-shadow: 0px 0px 45px -7px rgba(0, 0, 0, 1);
   box-shadow: 0px 0px 45px -7px rgba(0, 0, 0, 1);
+  margin: 0px 10px;
 
-  @media only screen and (max-width: 768px) {
-    width: 100%;
-  }
+  // @media only screen and (max-width: 768px) {
+  //   width: 100%;
+  // }
 
   p {
     margin-top: 0px;
     text-align: center;
     color: red;
     padding: 0px 5px;
+    width: 100%;
   }
   img {
     width: 40%;
@@ -455,9 +454,9 @@ export default {
         padding: 10px;
         border-radius: 3px;
         border: 1px solid;
-        -webkit-box-shadow: inset 0px 0px 14px -10px rgba(0, 0, 0, 0.75);
-        -moz-box-shadow: inset 0px 0px 14px -10px rgba(0, 0, 0, 0.75);
-        box-shadow: inset 0px 0px 14px -10px rgba(0, 0, 0, 0.75);
+        -webkit-box-shadow: inset 0px 0px 9px -10px rgba(0, 0, 0, 0.75);
+        -moz-box-shadow: inset 0px 0px 9px -10px rgba(0, 0, 0, 0.75);
+        box-shadow: inset 0px 0px 9px -10px rgba(0, 0, 0, 0.75);
 
         @media only screen and (max-width: 768px) {
           width: 70%;
@@ -505,9 +504,9 @@ export default {
 
       input {
         width: 80%;
-        -webkit-box-shadow: inset 0px 0px 14px -10px rgba(0, 0, 0, 0.75);
-        -moz-box-shadow: inset 0px 0px 14px -10px rgba(0, 0, 0, 0.75);
-        box-shadow: inset 0px 0px 14px -10px rgba(0, 0, 0, 0.75);
+        -webkit-box-shadow: inset 0px 0px 9px -10px rgba(0, 0, 0, 0.75);
+        -moz-box-shadow: inset 0px 0px 9px -10px rgba(0, 0, 0, 0.75);
+        box-shadow: inset 0px 0px 9px -10px rgba(0, 0, 0, 0.75);
       }
       input[type='text'] {
         margin-bottom: 5px;

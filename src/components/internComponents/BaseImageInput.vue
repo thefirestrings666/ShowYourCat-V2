@@ -26,7 +26,10 @@
         areaClassname: 'areaClass'
       }"
     ></cropper>
-    <div v-if="v_preview" class="cropper"><img :src="imageData" /></div>
+    <div v-if="v_preview" class="cropper">
+      <img :src="imageData" />
+    </div>
+
     <div v-if="v_preview" class="login-btn top-margin" @click="resetComp">
       Try again !
     </div>
@@ -47,6 +50,7 @@ export default {
     return {
       imageData: null,
       imageDataComplete: false,
+      imageJPG: null,
 
       CircleStencil,
       coordinates: {
@@ -58,11 +62,7 @@ export default {
       v_preview: false
     }
   },
-  beforeDestroy() {
-    if (this.imageData && !this.imageDataComplete) {
-      this.cropPreview()
-    }
-  },
+
   methods: {
     chooseImage() {
       this.$refs.fileInput.click()
@@ -75,13 +75,12 @@ export default {
         reader.onload = e => {
           this.imageData = e.target.result
         }
+
         reader.readAsDataURL(input.files[0])
         this.$emit('input', input.files[0])
       }
     },
-    // change({ coordinates, canvas }) {
-    //   console.log(coordinates, canvas)
-    // },
+
     roundEdges(canvas) {
       const context = canvas.getContext('2d')
       const { width } = canvas
@@ -146,8 +145,6 @@ export default {
 
   img {
     width: 100%;
-    -webkit-filter: drop-shadow(0px 0px 5px #222);
-    filter: drop-shadow(0px 0px 5px 3px #222);
   }
 }
 .login-btn {
