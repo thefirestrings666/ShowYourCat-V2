@@ -28,7 +28,7 @@
 import { mapState, mapActions, mapGetters } from 'vuex'
 import NavBar from '@/components/NavBar'
 import Footer from '@/components/Footer'
-// import PhotoUploader from '@/components/internComponents/photoUploader'
+import PhotoUploader from '@/components/internComponents/photoUploader'
 import NewContentAvailableToastr from '@/components/NewContentAvailableToastr'
 import AppleAddToHomeScreenModal from '@/components/AppleAddToHomeScreenModal'
 
@@ -37,8 +37,8 @@ export default {
     NavBar,
     Footer,
     NewContentAvailableToastr,
-    AppleAddToHomeScreenModal
-    // PhotoUploader
+    AppleAddToHomeScreenModal,
+    PhotoUploader
   },
   computed: {
     ...mapGetters('app', ['newContentAvailable']),
@@ -80,7 +80,7 @@ body {
     justify-items: center;
 
     @media (max-width: 500px) {
-      grid-template-rows: 3.6rem auto;
+      grid-template-rows: 3.6rem auto 3.6rem 10px;
     }
 
     .new-content-available-toastr {

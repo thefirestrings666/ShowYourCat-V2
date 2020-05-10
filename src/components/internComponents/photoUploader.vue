@@ -58,7 +58,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
 
 export default {
   data() {
@@ -75,54 +75,80 @@ export default {
     },
     onSelectFile(imageReturned) {
       const input = imageReturned.target
+
       if (input.files && input.files[0]) {
         const reader = new FileReader()
         reader.onload = e => {
           this.imageData = e.target.result
+
+          this.setPictureToUpload(this.imageData)
+
+          this.$router.push({
+            name: 'upload',
+            params: 'id'
+          })
         }
         if (input.files[0].type.match('image.*')) {
-          console.log('image detected')
+          reader.readAsDataURL(input.files[0])
         }
       }
-    }
+    },
+    ...mapActions('userData', ['setPictureToUpload'])
   }
 }
 </script>
 
 <style lang="scss" scoped>
-
-.photoButton {
-  height: 3.6rem;
+.uploadButton {
+  display: flex;
   width: 100%;
-  // position: fixed;
-  //   width: 40px;
-  //   height: 40px;
-  //   border-radius: 100px;
-  //   border: #471d00 5px solid;
-  //   display: block;
-  //   bottom: 10px;
-  //   right: 10px;
-  //   padding: 10px;
-  //   background: rgb(255, 245, 234);
+  align-content: flex-end;
+  flex-direction: row-reverse;
+  margin-right: 15px;
+  margin-bottom: 15px;
 
-  //   @media screen and (min-width: 495px) {
-  //     bottom: 70px;
-  //     right: 10px;
-  //   }
-  //   @media screen and (min-width: 1000px) {
-  //     bottom: 70px;
-  //     right: 20px;
-  //   }
+  .photoButton {
+    height: 40px;
+    width: 40px;
+    // display: block;
+    background: rgb(255, 245, 234);
+    border-radius: 100px;
+    border: #471d00 5px solid;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    svg {
+      fill: #471d00;
+      display: block;
+      width: 60%;
+      height: 60%;
+    }
+
+    //   width: 40px;
+    //   height: 40px;
+    //   border-radius: 100px;
+    //   border: #471d00 5px solid;
+    //   display: block;
+    //   bottom: 10px;
+    //   right: 10px;
+    //   padding: 10px;
+    //   background: rgb(255, 245, 234);
+
+    //   @media screen and (min-width: 495px) {
+    //     bottom: 70px;
+    //     right: 10px;
+    //   }
+    //   @media screen and (min-width: 1000px) {
+    //     bottom: 70px;
+    //     right: 20px;
+    //   }
+  }
 }
 
 .photoButton:hover {
   cursor: pointer;
   background: rgb(250, 205, 157);
-}
-
-svg {
-  fill: #471d00;
-  position: absolute;
 }
 
 .file-input {

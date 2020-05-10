@@ -6,41 +6,40 @@
       <!-- <span class="site-name title-desktop">Show Your Cat</span>
       <span class="site-name title-mobile">Show Your Cat</span> -->
     </router-link>
-    <div v-if="isUserLoggedIn && networkOnLine" class="logo-top-container">
-      <img
-        alt="logo-bento"
-        class="logo-middle-connected"
-        src="@/assets/logotop.svg"
-      />
+    <div
+      v-if="isUserLoggedIn && networkOnLine"
+      class="logo-top-container-connected"
+    >
+      <img alt="logo-bento" class="logo-middle" src="@/assets/logotop.svg" />
     </div>
     <div v-else class="logo-top-container">
       <img alt="logo-bento" class="logo-middle" src="@/assets/logotop.svg" />
     </div>
-    <div v-if="isUserLoggedIn && networkOnLine" class="links">
-      <nav class="nav-links">
-        <div class="user-data-wrapper">
-          <div>
-            <h5>XP</h5>
-            <p>{{ xp }}</p>
-          </div>
-          <div>
-            <h5>LVL</h5>
-            <p>{{ level }}</p>
-          </div>
-          <div>
-            <h5>coins</h5>
-            <p>{{ coins }}</p>
-          </div>
+    <div v-if="isUserLoggedIn && networkOnLine" class="userPanel">
+      <div class="userScore">
+        <div>
+          <h5>XP</h5>
+          <p>{{ xp }}</p>
         </div>
-      </nav>
+        <div>
+          <h5>LVL</h5>
+          <p>{{ level }}</p>
+        </div>
+        <div>
+          <h5>coins</h5>
+          <p>{{ coins }}</p>
+        </div>
+      </div>
+      <div class="userPicture">
+        <img
+          v-if="isUserLoggedIn && networkOnLine"
+          class="user-picture"
+          :src="user.photoURL"
+          alt="Avatar"
+          @click="logout"
+        />
+      </div>
     </div>
-    <img
-      v-if="isUserLoggedIn && networkOnLine"
-      class="user-picture"
-      :src="user.photoURL"
-      alt="Avatar"
-      @click="logout"
-    />
   </header>
 </template>
 
@@ -79,23 +78,21 @@ export default {
 @import '@/theme/variables.scss';
 
 .navbar {
-  //  position: absolute;
   display: flex;
-  //  top: 0;
-  //  left: 0;
+  justify-content: space-between;
   z-index: 20;
-  //  right: 0;
+  margin-bottom: 5px;
+
   height: $navbar-height;
   background-color: $navbar-color;
-  box-sizing: border-box;
-  border-bottom: 1px solid #eaecef;
-  line-height: 1.55rem;
+  // box-sizing: border-box;
+  // border-bottom: 1px solid #eaecef;
+  // line-height: 1.55rem;
   width: 100%;
 
   a {
     display: flex;
     align-items: center;
-    margin: 10px;
   }
 
   .title-desktop {
@@ -133,75 +130,149 @@ export default {
 
   .logo {
     height: 35px;
-    padding-right: 8px;
+
     filter: invert(21%) sepia(5%) saturate(2878%) hue-rotate(346deg)
       brightness(104%) contrast(97%);
   }
   .logo-top-container {
-    width: 100%;
+    display: flex;
+    width: 100vw;
     position: absolute;
-    top: 10px;
+    justify-content: flex-start;
+    height: 59px;
+    z-index: -1;
 
     .logo-middle {
-      display: block;
-      position: relative;
+      width: 40%;
       margin: auto;
+      max-width: 200px;
       filter: invert(21%) sepia(5%) saturate(2878%) hue-rotate(346deg)
         brightness(104%) contrast(97%);
+
+      @media screen and (min-width: 600px) {
+        width: 20%;
+      }
     }
 
     .logo-middle-connected {
-      display: none;
-      position: relative;
-      margin: auto;
+      // display: none;
+      //  position: relative;
+      //  margin: auto;
+      width: 100%;
       filter: invert(21%) sepia(5%) saturate(2878%) hue-rotate(346deg)
         brightness(104%) contrast(97%);
 
       @media screen and (min-width: 600px) {
         display: block;
+        width: 20%;
+        margin: auto;
       }
       @media screen and (min-width: 1000px) {
         display: block;
       }
     }
   }
-
-  .links {
-    padding-left: 1.5rem;
-    box-sizing: border-box;
-    white-space: nowrap;
-    font-size: 0.9rem;
-    position: absolute;
-    right: 1.5rem;
-    top: 0.2rem;
+  // CSS for connected user
+  .logo-top-container-connected {
     display: flex;
+    width: 50%;
+    align-items: center;
+    z-index: -1;
+    justify-content: center;
 
-    .nav-links {
+    @media screen and (min-width: 600px) {
       display: flex;
-      align-items: center;
-      justify-content: center;
+      width: 100vw;
+      position: absolute;
+      justify-content: flex-start;
+      height: 59px;
+      z-index: -1;
+    }
 
-      .user-data-wrapper {
+    .logo-middle {
+      width: 75%;
+      filter: invert(21%) sepia(5%) saturate(2878%) hue-rotate(346deg)
+        brightness(104%) contrast(97%);
+
+      @media screen and (min-width: 600px) {
+        width: 20%;
+        margin: auto;
+        max-width: 200px;
+      }
+    }
+
+    .logo-middle-connected {
+      // display: none;
+      //  position: relative;
+      //  margin: auto;
+      width: 100%;
+      filter: invert(21%) sepia(5%) saturate(2878%) hue-rotate(346deg)
+        brightness(104%) contrast(97%);
+
+      @media screen and (min-width: 600px) {
+        display: block;
+        width: 20%;
+        margin: auto;
+      }
+      @media screen and (min-width: 1000px) {
+        display: block;
+      }
+    }
+  }
+  .userPanel {
+    display: flex;
+    flex-direction: row;
+
+    .userScore {
+      display: flex;
+      flex-direction: row;
+
+      justify-content: space-between;
+
+      div {
+        padding: 0px 10px;
+        border-right: 1px solid;
         display: flex;
-        position: absolute;
-        top: 0px;
-        right: 35px;
+        flex-direction: column;
+        align-items: center;
+        justify-content: space-around;
 
-        div {
-          text-align: center;
-          display: flex;
-          flex-direction: column;
-          min-width: 30px;
-          align-content: flex-start;
-          border-right: 1px solid #2c3e50;
-          padding: 0px 10px;
+        p {
+          margin: 0px;
+        }
+      }
+    }
 
-          h5 {
-            margin: 0px;
-          }
-          p {
-            margin: 0px;
-          }
+    .userPicture {
+      display: flex;
+      flex-direction: row;
+      margin: 0px 10px;
+      align-items: center;
+    }
+
+    h5 {
+      margin: 0px;
+    }
+    .div {
+      // display: flex;
+      // position: absolute;
+      // top: 0px;
+      // right: 35px;
+
+      div {
+        // text-align: center;
+        // display: flex;
+        // flex-direction: column;
+        // min-width: 30px;
+        // align-content: flex-start;
+        // border-right: 1px solid #2c3e50;
+        // padding: 0px 10px;
+
+        h5 {
+          margin: 0px;
+        }
+        p {
+          margin: 0px;
         }
       }
 
@@ -253,12 +324,8 @@ export default {
   }
 
   .user-picture {
-    position: absolute;
     max-height: 45px;
-    margin-left: 1.5rem;
     border-radius: 50%;
-    top: 5px;
-    right: 10px;
     cursor: pointer;
   }
 

@@ -57,6 +57,11 @@ const router = new Router({
         )
     },
     {
+      path: '/upload',
+      name: 'upload',
+      props: true
+    },
+    {
       path: '/verification',
       name: 'userVerification',
       meta: {

@@ -1,6 +1,6 @@
 <template>
   <div class="component-wrapper">
-    <img src="@/assets/catface4.svg" />
+    <img class="image-top" src="@/assets/catface4.svg" />
     <p>{{ errorMessage }}</p>
     <div v-if="v_spanner" class="spanner">
       <h4>Sign-in</h4>
@@ -394,19 +394,27 @@ export default {
   //   width: 100%;
   // }
 
+  .image-top {
+    width: 40%;
+    height: 40%;
+    margin: 0px 50px 0px 50px;
+    filter: invert(21%) sepia(5%) saturate(2878%) hue-rotate(346deg)
+      brightness(104%) contrast(97%);
+
+    @media screen and (min-width: 600px) {
+      margin: 0px 50px 20px 50px;
+    }
+  }
   p {
-    margin-top: 0px;
+    margin: 0px;
     text-align: center;
     color: red;
     padding: 0px 5px;
     width: 100%;
-  }
-  img {
-    width: 40%;
-    height: 40%;
-    margin: 0px 50px 20px 50px;
-    filter: invert(21%) sepia(5%) saturate(2878%) hue-rotate(346deg)
-      brightness(104%) contrast(97%);
+
+    @media screen and (min-width: 600px) {
+      margin: 16px;
+    }
   }
 
   h4 {

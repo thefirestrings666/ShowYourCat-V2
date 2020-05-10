@@ -5,6 +5,7 @@
       :max-rating="6"
       :show-rating="false"
       :rounded-corners="true"
+      :star-size="starSize"
       @rating-selected="vote_selected"
     ></StarRating>
   </div>
@@ -19,7 +20,8 @@ export default {
   },
   data() {
     return {
-      var_VoteSelected: 0
+      var_VoteSelected: 0,
+      starSize: 45
     }
   },
   methods: {

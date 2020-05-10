@@ -37,7 +37,7 @@ export default {
   line-height: 2.2rem;
   text-align: right;
   width: 100%;
-  @media (max-width: 500px) {
+  @media screen and (max-width: 500px) {
     display: none;
   }
   a {

@@ -7,5 +7,9 @@ export default {
     }
 
     commit('load_userData', payload)
+  },
+
+  setPictureToUpload: async ({ commit }, picture) => {
+    commit('setPictureToUpload', picture)
   }
 }
