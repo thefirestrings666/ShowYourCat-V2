@@ -20,7 +20,7 @@ export default {
         }
 
         const redirectUrl = isNil(user)
-          ? `/login?redirectUrl=${this.$route.query.redirectUrl}`
+          ? `/home?redirectUrl=${this.$route.query.redirectUrl}`
           : this.$route.query.redirectUrl
 
         this.$router.push(redirectUrl)

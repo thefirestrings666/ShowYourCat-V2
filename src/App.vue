@@ -54,6 +54,7 @@ export default {
 </script>
 
 <style lang="scss">
+@import '@/theme/variables.scss';
 body {
   margin: 0;
   background: url('../src/assets/background.jpg') no-repeat fixed center;
@@ -64,6 +65,10 @@ body {
   a {
     font-weight: 500;
     text-decoration: none;
+  }
+
+  a:visited {
+    color: $navbar-link-color;
   }
 
   #app {
@@ -102,7 +107,11 @@ body {
     }
 
     .main-wrapper {
+      width: 100%;
       .page-wrapper {
+        display: flex;
+        justify-content: center;
+        width: 100%;
         @media screen and (max-width: 1000px) {
           width: 100%;
         }

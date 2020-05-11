@@ -37,7 +37,7 @@
 
     <div v-if="v_spanner" class="separator" />
 
-    <div v-if="v_spanner" class="spanner">
+    <div class="spanner">
       <h4>With socials</h4>
       <ul>
         <li>
@@ -52,13 +52,15 @@
         </li>
         <li>
           <h4>or</h4>
-          <div data-test="login-btn" class="login-btn" @click="signUp_access">
-            Sign-up !
-          </div>
+          <router-link to="/signup">
+            <div data-test="login-btn" class="login-btn">
+              Sign-up !
+            </div>
+          </router-link>
         </li>
       </ul>
     </div>
-    <div v-else class="connexion-wrapper">
+    <!-- <div v-else class="connexion-wrapper">
       <form>
         <ul>
           <h4>Sign-up</h4>
@@ -93,7 +95,6 @@
           <li>
             <label>Import your cat :</label>
 
-            <span v-if="errorPassword2">{{ errorPassword2 }}</span>
             <base-image-input @img_selected="updateUserPicture" />
           </li>
           <li>
@@ -110,7 +111,7 @@
           </li>
         </ul>
       </form>
-    </div>
+    </div> -->
   </div>
 </template>
 
@@ -119,12 +120,10 @@ import firebase from 'firebase/app'
 import downscale from 'downscale'
 import { desktop as isDekstop } from 'is_js'
 import { mapState, mapGetters, mapMutations, mapActions } from 'vuex'
-import BaseImageInput from './internComponents/BaseImageInput.vue'
+// import BaseImageInput from './internComponents/BaseImageInput.vue'
 
 export default {
-  components: {
-    BaseImageInput
-  },
+  components: {},
   props: {
     myMessage: String
   },
@@ -209,14 +208,8 @@ export default {
           // ...
         })
     },
-    signUp_access() {
-      this.v_spanner = false
-      this.errorMessage = ''
-    },
-    sigUp_back() {
-      this.v_spanner = true
-      this.resetData()
-    },
+
+
     checkSpace() {
       this.u_nickname = this.u_nickname.split(' ').join('')
     },
@@ -396,13 +389,12 @@ export default {
 
   .image-top {
     width: 40%;
-    height: 40%;
     margin: 0px 50px 0px 50px;
     filter: invert(21%) sepia(5%) saturate(2878%) hue-rotate(346deg)
       brightness(104%) contrast(97%);
 
     @media screen and (min-width: 600px) {
-      margin: 0px 50px 20px 50px;
+      //    margin: 0px 50px 20px 50px;
     }
   }
   p {

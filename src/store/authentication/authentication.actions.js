@@ -67,7 +67,7 @@ export default {
 
     const currentRouter = router.app.$route
     if (!(currentRouter.meta && currentRouter.meta.authNotRequired)) {
-      router.push('/login')
+      router.push('/home')
     }
   }
 }

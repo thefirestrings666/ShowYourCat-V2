@@ -26,7 +26,7 @@
         areaClassname: 'areaClass'
       }"
     ></cropper>
-    <div v-if="v_preview" class="cropper">
+    <div v-if="v_preview" class="cropper-result">
       <img :src="imageData" />
     </div>
 
@@ -112,20 +112,22 @@ export default {
 <style lang="scss" scoped>
 @import '@/theme/variables.scss';
 .base-image-input {
-  display: block;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   width: 250px;
-  height: 250px;
+  height: 300px;
   cursor: pointer;
   background-size: cover;
   background-position: center center;
   margin: auto;
   padding: 5px;
-  margin-bottom: 50px;
 }
 .placeholder {
   background: #f0f0f0;
-  width: 100%;
-  height: 100%;
+  width: 250px;
+  height: 250px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -140,8 +142,16 @@ export default {
   display: none;
 }
 .cropper {
-  height: 250px;
   background: transparent;
+
+  img {
+    width: 100%;
+  }
+}
+
+.cropper-result {
+  background: transparent;
+  width: 150px;
 
   img {
     width: 100%;

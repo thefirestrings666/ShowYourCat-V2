@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import Head from 'vue-head'
 import Home from '@/views/Home'
+import Signup from '@/views/SignUp'
 import VerificationMail from '@/views/UserVerification'
 import CheckLogin from '@/views/CheckLogin'
 import { isNil } from 'lodash'
@@ -25,6 +26,14 @@ const router = new Router({
       path: '/home',
       name: 'home',
       component: Home,
+      meta: {
+        authNotRequired: true
+      }
+    },
+    {
+      path: '/signup',
+      name: 'signup',
+      component: Signup,
       meta: {
         authNotRequired: true
       }
@@ -57,9 +66,12 @@ const router = new Router({
         )
     },
     {
-      path: '/upload',
+      path: '/uploadCat',
       name: 'upload',
-      props: true
+      component: () =>
+        import(
+          /* webpackChunkName: "client-chunk-upload" */ '@/views/UploadCat.vue'
+        )
     },
     {
       path: '/verification',
