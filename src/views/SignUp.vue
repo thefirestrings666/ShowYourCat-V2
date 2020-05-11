@@ -24,7 +24,7 @@
         <input v-model="u_password" type="password" placeholder="Password" />
         <span v-if="errorPassword" class="error-tab">{{ errorPassword }}</span>
       </div>
-      <div class="field-aera">
+      <div class="field-aera flex">
         <label>Import your cat :</label>
 
         <base-image-input @img_selected="updateUserPicture" />

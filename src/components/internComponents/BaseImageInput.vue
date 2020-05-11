@@ -117,7 +117,6 @@ export default {
   align-items: center;
   justify-content: center;
   width: 250px;
-  height: 300px;
   cursor: pointer;
   background-size: cover;
   background-position: center center;
