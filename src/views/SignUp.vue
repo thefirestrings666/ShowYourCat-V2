@@ -13,7 +13,13 @@
         <span v-if="errorNickname" class="error-tab">{{ errorNickname }}</span>
       </div>
       <div class="field-aera">
-        <input v-model="u_mail" type="text" placeholder="E-mail" />
+        <input
+          id="email"
+          v-model="u_mail"
+          type="text"
+          placeholder="E-mail"
+          autocomplete="email"
+        />
         <span v-if="errorEmail" class="error-tab">{{ errorEmail }}</span>
       </div>
       <div class="field-aera">
@@ -21,8 +27,14 @@
         <span v-if="errorPassword" class="error-tab">{{ errorPassword }}</span>
       </div>
       <div class="field-aera">
-        <input v-model="u_password" type="password" placeholder="Password" />
-        <span v-if="errorPassword" class="error-tab">{{ errorPassword }}</span>
+        <input
+          v-model="u_password2"
+          type="password"
+          placeholder="Confirm your password"
+        />
+        <span v-if="errorPassword2" class="error-tab">{{
+          errorPassword2
+        }}</span>
       </div>
       <div class="field-aera flex">
         <label>Import your cat :</label>
@@ -33,9 +45,11 @@
         <div data-test="login-btn" class="login-btn" @click="signUp_validation">
           Sign-up !
         </div>
-        <div data-test="login-btn" class="login-btn" @click="sigUp_back">
-          Back
-        </div>
+        <router-link to="/home">
+          <div data-test="login-btn" class="login-btn">
+            Back
+          </div>
+        </router-link>
       </div>
     </div>
   </div>
@@ -44,6 +58,7 @@
 <script>
 import firebase from 'firebase/app'
 import downscale from 'downscale'
+import { mapActions } from 'vuex'
 import BaseImageInput from '../components/internComponents/BaseImageInput.vue'
 
 export default {
@@ -71,6 +86,10 @@ export default {
     }
   },
   methods: {
+    ...mapActions('authentication', [
+      'updateUserDetails',
+      'updateUserPictureLink'
+    ]),
     checkSpace() {
       this.u_nickname = this.u_nickname.split(' ').join('')
     },
@@ -206,6 +225,9 @@ export default {
             // An error happened.
           }
         )
+        .then(() => {
+          this.$router.push({ name: 'home' })
+        })
     },
     resetData() {
       this.u_nickname = ''

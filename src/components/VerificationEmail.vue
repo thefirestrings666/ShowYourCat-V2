@@ -59,12 +59,11 @@ export default {
 @import '@/theme/variables.scss';
 
 .component-wrapper {
-  margin-top: 100px;
   display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  width: 75%;
+  flex-direction: column;
   max-width: 600px;
+  width: 100%;
+  align-items: center;
   padding: 15px 0px;
   border: 1px solid;
   border-radius: 3px;
@@ -72,6 +71,7 @@ export default {
   -webkit-box-shadow: 0px 0px 45px -7px rgba(0, 0, 0, 1);
   -moz-box-shadow: 0px 0px 45px -7px rgba(0, 0, 0, 1);
   box-shadow: 0px 0px 45px -7px rgba(0, 0, 0, 1);
+  margin: 0px 10px;
 
   @media only screen and (max-width: 768px) {
     margin-top: 15px;

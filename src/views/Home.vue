@@ -1,10 +1,7 @@
 <template>
   <div v-if="user" key="user.emailVerified" class="page-wrapper">
     <CatRatingSystem v-if="user.emailVerified"> </CatRatingSystem>
-    <div v-else class="component-wrapper">
-      <img alt="logo-bento" class="logo" src="@/assets/catface4.svg" />
-      <h4>Please activate hour account, check your mailbox !</h4>
-    </div>
+    <notActivated v-else> </notActivated>
   </div>
   <div v-else-if="user === null" class="page-wrapper">
     <authentication> </authentication>
@@ -18,11 +15,13 @@
 import { mapState, mapGetters } from 'vuex'
 import authentication from '../components/Authentication.vue'
 import CatRatingSystem from '../components/CatRatingSystem.vue'
+import notActivated from '../components/notActivated.vue'
 
 export default {
   components: {
     authentication,
-    CatRatingSystem
+    CatRatingSystem,
+    notActivated
   },
   data() {
     return {}
@@ -64,6 +63,21 @@ export default {
   //   flex-direction: column;
   // }
 
+  .notActivated {
+    display: flex;
+    flex-direction: column;
+    max-width: 600px;
+    width: 100%;
+    align-items: center;
+    padding: 15px 0px;
+    border: 1px solid;
+    border-radius: 3px;
+    background-color: rgba(255, 255, 255, 0.9);
+    -webkit-box-shadow: 0px 0px 45px -7px rgba(0, 0, 0, 1);
+    -moz-box-shadow: 0px 0px 45px -7px rgba(0, 0, 0, 1);
+    box-shadow: 0px 0px 45px -7px rgba(0, 0, 0, 1);
+    margin: 0px 10px;
+  }
   .logo {
     width: 40%;
     height: 40%;

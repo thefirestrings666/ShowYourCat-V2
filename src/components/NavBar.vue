@@ -2,19 +2,29 @@
   <header class="navbar" :class="{ offline: !networkOnLine }">
     <router-link to="/home">
       <img alt="logo-bento" class="logo" src="@/assets/catface4.svg" />
-
-      <!-- <span class="site-name title-desktop">Show Your Cat</span>
-      <span class="site-name title-mobile">Show Your Cat</span> -->
     </router-link>
+
     <div
       v-if="isUserLoggedIn && networkOnLine"
       class="logo-top-container-connected"
     >
-      <img alt="logo-bento" class="logo-middle" src="@/assets/logotop.svg" />
+      <img
+        alt="logo-bento"
+        class="logo-middle"
+        src="@/assets/logotop.svg"
+        @click="goHome"
+      />
     </div>
+
     <div v-else class="logo-top-container">
-      <img alt="logo-bento" class="logo-middle" src="@/assets/logotop.svg" />
+      <img
+        alt="logo-bento"
+        class="logo-middle"
+        src="@/assets/logotop.svg"
+        @click="goHome"
+      />
     </div>
+
     <div v-if="isUserLoggedIn && networkOnLine" class="userPanel">
       <div class="userScore">
         <div>
@@ -69,6 +79,9 @@ export default {
   methods: {
     async logout() {
       await firebase.auth().signOut()
+    },
+    goHome() {
+      this.$router.push({ name: 'home' })
     }
   }
 }
@@ -130,6 +143,7 @@ export default {
 
   .logo {
     height: 35px;
+    margin-left: 10px;
 
     filter: invert(21%) sepia(5%) saturate(2878%) hue-rotate(346deg)
       brightness(104%) contrast(97%);

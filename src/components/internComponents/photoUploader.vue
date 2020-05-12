@@ -1,6 +1,10 @@
 <template>
   <div class="uploadButton">
-    <div v-if="isUserLoggedIn" class="photoButton" @click="selectFile">
+    <div
+      v-if="isUserLoggedIn && user.emailVerified"
+      class="photoButton"
+      @click="selectFile"
+    >
       <svg
         id="Calque_1"
         version="1.1"
@@ -58,7 +62,7 @@
 </template>
 
 <script>
-import { mapGetters, mapActions } from 'vuex'
+import { mapGetters, mapActions, mapState } from 'vuex'
 
 export default {
   data() {
@@ -67,7 +71,8 @@ export default {
     }
   },
   computed: {
-    ...mapGetters('authentication', ['isUserLoggedIn'])
+    ...mapGetters('authentication', ['isUserLoggedIn']),
+    ...mapState('authentication', ['user'])
   },
   methods: {
     selectFile() {
