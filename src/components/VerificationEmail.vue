@@ -47,6 +47,9 @@ export default {
 
           // ...
         })
+        .then(() => {
+          firebase.currentUser().reload()
+        })
     },
 
     ...mapMutations('authentication', ['setUser']),
