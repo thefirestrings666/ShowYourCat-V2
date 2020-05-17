@@ -72,7 +72,7 @@ export default {
   .site-name {
     font-size: 0.9rem;
     font-weight: 600;
-    color: #2c3e50;
+    color: $border-color;
     position: absolute;
     text-align: right;
     right: 20px;
@@ -83,60 +83,6 @@ export default {
     padding-right: 8px;
     filter: invert(21%) sepia(5%) saturate(2878%) hue-rotate(346deg)
       brightness(104%) contrast(97%);
-  }
-
-  .links {
-    padding-left: 1.5rem;
-    box-sizing: border-box;
-    white-space: nowrap;
-    font-size: 0.9rem;
-    position: absolute;
-    right: 1.5rem;
-    top: 0.7rem;
-    display: flex;
-
-    .nav-links {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-
-      .nav-item {
-        position: relative;
-        display: inline-block;
-        margin-left: 1.5rem;
-        line-height: 2.2rem;
-
-        &:first-child {
-          margin-left: 0;
-        }
-
-        a {
-          font-weight: 500;
-          font-size: 0.9rem;
-          text-decoration: none;
-          color: $navbar-link-color;
-          border-color: #2c3e50;
-          line-height: 1.4rem;
-          display: inline-block;
-          cursor: pointer;
-        }
-
-        @mixin activatedLink() {
-          margin-bottom: -2px;
-          border-bottom: 2px solid $vue-color;
-        }
-
-        .router-link-active {
-          @include activatedLink;
-        }
-
-        @media (hover) {
-          :hover {
-            @include activatedLink;
-          }
-        }
-      }
-    }
   }
 
   &.offline {

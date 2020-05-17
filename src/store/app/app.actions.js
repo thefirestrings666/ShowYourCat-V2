@@ -1,4 +1,6 @@
 import { isNil } from 'lodash'
+import CatPicturesDB from '@/firebase/catPictures-data-db'
+import Firebase from 'firebase'
 
 export default {
   /**
@@ -18,5 +20,38 @@ export default {
 
     commit('setRefreshingApp', true)
     state.SWRegistrationForNewContent.waiting.postMessage('skipWaiting')
+  },
+
+  addPictureDB: async (context, payload) => {
+    const userFromFirebase = await Firebase.auth().currentUser
+    const CatPicturesDb = new CatPicturesDB()
+
+    await CatPicturesDb.create({
+      userID: userFromFirebase.uid,
+      pictureID: `${payload.PictureId}_600x600`,
+
+      title: payload.title,
+      votes: 0,
+      approved: false
+    })
+  },
+
+  loadRandomCat: async pictureURL => {
+    const CatPicturesDb = new CatPicturesDB()
+
+    const allPictures = await CatPicturesDb.readAll()
+
+    const random = Math.floor(Math.random() * Math.floor(allPictures.length))
+
+    const storage = Firebase.storage()
+
+    await storage
+      .ref(`catPicture/${allPictures[random].pictureID}`)
+      .getDownloadURL()
+      .then(output => {
+        pictureURL = output
+      })
+
+    return pictureURL
   }
 }

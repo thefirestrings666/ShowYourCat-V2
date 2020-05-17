@@ -8,11 +8,12 @@ service cloud.firestore {
        allow update, delete: if authenticated() && request.auth.uid == userId;
     }
 
+    match /CatPictures/{catPictureId} {
+allow write, read, update : if authenticated() ;
+    }
+    
     match /users/{userId}/products/{productId} {
-      allow get: if authenticated() && request.auth.uid == userId;
-			allow list: if authenticated() && request.auth.uid == userId;
-      allow create: if authenticated() && request.auth.uid == userId;
-      allow update, delete: if authenticated() && request.auth.uid == userId;
+allow write, read, update : if authenticated() ;
     }
 
     match /users/{userId}/user_Data/{user_DataId} {

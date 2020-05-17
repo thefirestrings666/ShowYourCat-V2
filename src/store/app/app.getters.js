@@ -1,5 +1,6 @@
 import { isNil } from 'lodash'
 
 export default {
-  newContentAvailable: state => !isNil(state.SWRegistrationForNewContent)
+  newContentAvailable: state => !isNil(state.SWRegistrationForNewContent),
+  isCameraAvailable: state => state.CameraSwitch
 }

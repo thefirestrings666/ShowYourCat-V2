@@ -163,7 +163,7 @@ export default {
   border: 1px solid;
   display: inline-block;
   border-radius: 3px;
-  border-color: #2c3e50;
+  border-color: $border-color;
 }
 .bPencil {
   opacity: 0.2;
