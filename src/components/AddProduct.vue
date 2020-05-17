@@ -48,7 +48,7 @@ export default {
     outline: none;
     font: inherit;
     border: 1px solid;
-    border-color: #2c3e50;
+    border-color: $border-color;
     border-radius: 3px;
   }
 
@@ -59,7 +59,7 @@ export default {
     display: inline-block;
     border-radius: 3px;
     margin-left: 10px;
-    border-color: #2c3e50;
+    border-color: $border-color;
 
     &.disabled {
       pointer-events: none;

@@ -55,20 +55,23 @@ export default {
 
 <style lang="scss">
 @import '@/theme/variables.scss';
+@import '@/theme/animate.scss';
+
 body {
   margin: 0;
-  background: url('../src/assets/background.jpg') no-repeat fixed center;
+  background: url('../src/assets/backgroundSV.svg') no-repeat fixed center;
   background-size: cover;
   background-position: top;
   -webkit-font-smoothing: antialiased;
 
   a {
-    font-weight: 500;
+    color: $blue-3;
     text-decoration: none;
   }
 
-  a:visited {
-    color: $navbar-link-color;
+  a:hover {
+    color: $hover;
+    border-color: $hover;
   }
 
   #app {
@@ -77,7 +80,7 @@ body {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     font-size: 16px;
-    color: #2c3e50;
+    color: $blue-3;
     display: grid;
     grid-template-rows: 3.6rem auto 3.6rem 3.6rem;
     min-height: 100vh;
@@ -108,6 +111,8 @@ body {
 
     .main-wrapper {
       width: 100%;
+      max-width: 600px;
+
       .page-wrapper {
         display: flex;
         justify-content: center;

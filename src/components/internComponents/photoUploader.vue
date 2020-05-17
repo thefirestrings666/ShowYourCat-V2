@@ -1,7 +1,7 @@
 <template>
   <div class="uploadButton">
     <div
-      v-if="isUserLoggedIn && user.emailVerified"
+      v-if="isUserLoggedIn && user.emailVerified && isCameraAvailable"
       class="photoButton"
       @click="selectFile"
     >
@@ -72,6 +72,7 @@ export default {
   },
   computed: {
     ...mapGetters('authentication', ['isUserLoggedIn']),
+    ...mapGetters('app', ['isCameraAvailable']),
     ...mapState('authentication', ['user'])
   },
   methods: {

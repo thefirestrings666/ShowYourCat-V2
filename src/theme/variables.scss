@@ -3,9 +3,23 @@
 $vue-color: #856600;
 $danger-color: #ea4d46;
 
+$blue-1: #2A628F;
+$blue-2: #1B3B6F;
+$blue-3: #13293D;
+
+$hover: #0582CA;
+
+$orange-1: #D7B377;
+
+$border-color: #3C3744;
+
+$box-shadow-1: 0px 0px 20px -5px rgba(0, 0, 0, 1);
+
 /* Navbar */
 
 $navbar-height: 3.6rem;
 $navbar-color: #fff;
 $navbar-offline-color: #333;
-$navbar-link-color: #2c3e50;
+$navbar-link-color: $border-color;
+
+$button-width: 4px;
