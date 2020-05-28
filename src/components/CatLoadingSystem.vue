@@ -1,6 +1,11 @@
 <template>
   <div class="picture-wrapper">
-    <img class="picture" :src="pictureURL" @load="isLoaded" />
+    <img
+      class="picture"
+      :src="pictureURL"
+      @load="isLoaded"
+      @error="loadRandomCat"
+    />
   </div>
 </template>
 
@@ -34,9 +39,17 @@ export default {
         .then(output => {
           this.pictureURL = output
         })
+        .catch(error => {
+          console.log(error)
+        })
     },
     isLoaded() {
       this.$emit('loadingDone')
+    },
+    callFunction() {
+      setTimeout(() => {
+        this.isLoaded()
+      }, 5000)
     }
   }
 }

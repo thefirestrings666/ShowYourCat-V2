@@ -2,8 +2,8 @@
   <div>
     <transition
       name="fxPopup"
-      enter-active-class="animated bounceIn fast"
-      leave-active-class="animated bounceOut fast"
+      enter-active-class="animated fadeIn fast"
+      leave-active-class="animated fadeOut fast"
       @after-leave="animationDone"
       @after-enter="v_loading = false"
     >
@@ -13,6 +13,7 @@
           :max-rating="6"
           :show-rating="false"
           :rounded-corners="true"
+          :read-only="v_loading"
           :star-size="starSize"
           @rating-selected="vote_selected"
         ></StarRating>
@@ -57,6 +58,9 @@ export default {
     },
     loadingIsDone() {
       this.loadingDone = true
+    },
+    timer() {
+      setTimeout((this.v_loading = false), 500)
     }
   }
 }
