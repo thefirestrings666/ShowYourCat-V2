@@ -457,7 +457,7 @@ export default {
   justify-content: center;
   max-width: 600px;
   padding: 15px 0px;
-  border: 1px solid;
+  //border: 1px solid;
   border-radius: 3px;
   background-color: rgba(255, 255, 255, 0.9);
   -webkit-box-shadow: $box-shadow-1;

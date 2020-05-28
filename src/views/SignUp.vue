@@ -333,7 +333,7 @@ export default {
   width: 100%;
   align-items: center;
   padding: 15px 0px;
-  border: 1px solid;
+  //border: 1px solid;
   border-radius: 3px;
   background-color: rgba(255, 255, 255, 0.9);
   -webkit-box-shadow: 0px 0px 45px -7px rgba(0, 0, 0, 1);
@@ -344,7 +344,7 @@ export default {
   .image-top {
     width: 40%;
     margin: 0px 0px 0px 0px;
-    fill: $blue-1;
+    fill: $blue-3;
     @media screen and (min-width: 600px) {
       //  margin: 0px 50px 20px 50px;
     }
