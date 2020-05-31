@@ -48,7 +48,6 @@ export default {
   },
 
   updateUserPictureLink: async ({ commit }, id) => {
-    console.log(id)
     const userDb = new UsersDB()
     const userFromFirebase = await userDb.read(id)
     await userDb.update({
