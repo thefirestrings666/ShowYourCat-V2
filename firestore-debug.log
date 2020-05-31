@@ -5,15 +5,3 @@ If you are using a library that supports the FIRESTORE_EMULATOR_HOST environment
 
 Dev App Server is now running.
 
-May 28, 2020 9:43:48 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-May 28, 2020 9:43:48 PM io.gapi.emulators.netty.NotFoundHandler handleRequest
-INFO: Unknown request URI: /home
-May 28, 2020 9:43:48 PM io.gapi.emulators.netty.NotFoundHandler handleRequest
-INFO: Unknown request URI: /favicon.ico
-May 28, 2020 9:43:49 PM io.gapi.emulators.netty.NotFoundHandler handleRequest
-INFO: Unknown request URI: /precache-manifest.2e2c7e61ed0ffeab38e0cf5ed4f0e02c.js
-May 28, 2020 9:43:49 PM io.gapi.emulators.netty.HttpVersionRoutingHandler channelRead
-INFO: Detected non-HTTP/2 connection.
-May 28, 2020 9:43:49 PM io.gapi.emulators.netty.NotFoundHandler handleRequest
-INFO: Unknown request URI: /service-worker.js
