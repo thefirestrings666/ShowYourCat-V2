@@ -682,6 +682,7 @@ export default {
     async logout() {
       await firebase.auth().signOut()
     },
+    
     goHome() {
       this.$router.push({ name: 'home' })
     }

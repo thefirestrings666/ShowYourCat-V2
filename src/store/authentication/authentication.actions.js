@@ -28,6 +28,7 @@ export default {
 
     // Initialise user
     dispatch('userData/load_userData', user, { root: true })
+    dispatch('userData/dataObserver', user, { root: true })
 
     // User activation
     if (!user.emailVerified) {

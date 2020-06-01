@@ -46,10 +46,14 @@ export default {
     ...mapState('authentication', ['user']),
     ...mapState('userData', ['user_data'])
   },
-  methods: mapActions('app', [
-    'closeAddToHomeScreenModalForApple',
-    'serviceWorkerSkipWaiting'
-  ])
+
+  methods: {
+    ...mapActions('app', [
+      'closeAddToHomeScreenModalForApple',
+      'serviceWorkerSkipWaiting'
+    ]),
+    ...mapActions('userData', ['dataObserver'])
+  }
 }
 </script>
 
