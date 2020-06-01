@@ -43,3 +43,26 @@ exports.addXP = functions.https.onCall(async (req, context) => {
 
   return xpToApply
 })
+
+exports.SetNewUserData = functions.firestore
+  .document('/users/{userId}')
+  .onCreate(async (snap, context) => {
+    // Grab the current value of what was written to Cloud Firestore.
+    const original = snap.data().original
+
+    console.info(snap)
+
+    await admin
+      .firestore()
+      .doc('users/' + context.params.userId)
+      .collection('userData')
+      .add({
+        level: 1,
+        coins: 0,
+        xp: 0
+      })
+
+    const uppercase = original.toUpperCase()
+
+    return snap.ref.set({ uppercase }, { merge: true })
+  })

@@ -4,6 +4,7 @@ import { isNil } from 'lodash'
 import { createNewUserFromFirebaseAuthUser } from '@/misc/helpers'
 
 import UsersDB from '@/firebase/users-db'
+import UsersDataDB from '@/firebase/users-db-data'
 
 export default {
   /**
@@ -17,6 +18,15 @@ export default {
       ? await createNewUserFromFirebaseAuthUser(firebaseAuthUser)
       : userFromFirebase
 
+    const userDataDb = new UsersDataDB(userFromFirebase.id)
+    const userDataFromDB = await userDataDb.readAll()
+    const userData = await userDataDb.read(userDataFromDB[0].id)
+
+    user.coins = userData.coins
+    user.level = userData.level
+    user.xp = userData.xp
+
+    console.log(user)
     if (userFromFirebase && !user.emailVerified) {
       await userDb.update({
         ...userFromFirebase,
