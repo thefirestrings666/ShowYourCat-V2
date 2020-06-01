@@ -26,6 +26,8 @@
 
 <script>
 import StarRating from 'vue-star-rating'
+import Firebase from 'firebase'
+import { mapActions } from 'vuex'
 import RandomCat from './CatLoadingSystem.vue'
 import LoadingAnimation from './AnimationLoading.vue'
 
@@ -49,7 +51,16 @@ export default {
     vote_selected() {
       this.loadingDone = false
       this.loadingDone = false
+
       setTimeout(() => (this.var_VoteSelected = 0), 0)
+
+      Firebase.functions()
+        .httpsCallable('addXP')({ id: 'ok' })
+        .then(newXP => {
+          this.refreshXP(newXP)
+          this.v_loading = false
+        })
+
       // to do
     },
     animationDone() {
@@ -61,7 +72,8 @@ export default {
     },
     timer() {
       setTimeout((this.v_loading = false), 500)
-    }
+    },
+    ...mapActions('userData', ['refreshXP'])
   }
 }
 </script>

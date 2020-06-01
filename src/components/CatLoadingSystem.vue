@@ -42,14 +42,6 @@ export default {
         .catch(error => {
           console.log(error)
         })
-      Firebase.functions()
-        .httpsCallable('addXP')({ data: '' })
-        .then(result => {
-          console.log(result)
-        })
-        .catch(error => {
-          console.log(error)
-        })
     },
     isLoaded() {
       this.$emit('loadingDone')

@@ -1,44 +1,45 @@
 const functions = require('firebase-functions')
 const admin = require('firebase-admin')
+const FieldValue = require('firebase-admin').firestore.FieldValue
 
 admin.initializeApp()
 
-// // Create and Deploy Your First Cloud Functions
-// // https://firebase.google.com/docs/functions/write-firebase-functions
-//
-// exports.helloWorld = functions.https.onRequest((request, response) => {
-//  response.send("Hello from Firebase!");
-// });
+exports.addXP = functions.https.onCall(async (req, context) => {
+  const userID = context.auth.uid
 
-// exports.addMessage = functions.https.onCall(async (req, context) => {
-//   // Grab the text parameter.
-//   const original = req.text
-//   // Push the new message into Cloud Firestore using the Firebase Admin SDK.
-//   const writeResult = await admin
-//     .firestore()
-//     .collection('messages')
-//     .add({ original: original })
-//   // Send back a message that we've succesfully written the message
-//   res.json({ result: `Message with ID: ${writeResult.id} added.` })
-// })
+  const userData = await admin
+    .firestore()
+    .doc('users/' + userID)
+    .get()
 
-exports.addXP = functions.https.onCall(async (data, context) => {
-  ref = await admin.database().ref('/users/aIGyOo9AL8gZx9jYCR9XnWEt0yZ2')
+  var timeDuringVotes = Date.now() - userData.data().lastVoteTime.seconds * 1000
 
-  ref
-    .once('value')
-    .then(snapshot => {
-      var event = (snapshot.val() && snapshot.val().email) || 'Anonymous'
-      return event
+  if (timeDuringVotes > 2500) {
+    // Vote accepted
+    var xpToApply = (userData.data().user_xp += 15)
+    const updateXP = await admin
+      .firestore()
+      .doc('users/' + userID)
+      .update({
+        user_xp: (userData.data().user_xp += 15)
+      })
+  } else {
+    console.info('Vote rejected : Too fast')
+    return 'Too fast'
+  }
+
+  const addVoteArchived = await admin
+    .firestore()
+    .doc('users/' + userID)
+    .collection('votesArchived')
+    .add({ original: 'original' })
+
+  const updateLastVote = await admin
+    .firestore()
+    .doc('users/' + userID)
+    .update({
+      lastVoteTime: FieldValue.serverTimestamp()
     })
-    .catch(error => {})
 
-  // ref.on('value', snap => {
-  //   pic = snap.val()
-  // })
-
-  // return context.auth.uid
-  // return new Promise((resolve, reject) => {
-  //   resolve({ userM00002: userMail.email })
-  // })
+  return xpToApply
 })
