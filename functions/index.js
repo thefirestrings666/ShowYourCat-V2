@@ -22,21 +22,25 @@ admin.initializeApp()
 //   res.json({ result: `Message with ID: ${writeResult.id} added.` })
 // })
 
-exports.addXP = functions.https.onCall(async (data, context) => {
-  ref = await admin.database().ref('/users/aIGyOo9AL8gZx9jYCR9XnWEt0yZ2')
+exports.addXP = functions.https.onRequest(async (data, resp) => {
+  const userID = data.query.userID
 
-  ref
-    .once('value')
-    .then(snapshot => {
-      var event = (snapshot.val() && snapshot.val().email) || 'Anonymous'
-      return event
+  const writeResult = await admin
+    .firestore()
+    .collection('users')
+    .doc(context.auth.uid)
+    .get()
+    .then(usr => {
+      return resp.json({ idOut: writeResult })
     })
-    .catch(error => {})
 
+  // return new Promise((resolve, reject) => {
+  //
+  // resolve({ userM00002: data })
+  // })
   // ref.on('value', snap => {
   //   pic = snap.val()
   // })
-
   // return context.auth.uid
   // return new Promise((resolve, reject) => {
   //   resolve({ userM00002: userMail.email })

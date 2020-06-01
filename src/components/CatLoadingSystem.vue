@@ -43,7 +43,7 @@ export default {
           console.log(error)
         })
       Firebase.functions()
-        .httpsCallable('addXP')({ data: '' })
+        .httpsCallable('addXP')({ userID: 'NRcvul3AYhVNCrt4Sx2lxZ9UMj72' })
         .then(result => {
           console.log(result)
         })
