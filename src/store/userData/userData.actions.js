@@ -20,6 +20,7 @@ export default {
     const UsersDb = await new UsersDB().read(firebase.auth().currentUser.uid)
     console.log(UsersDb.user_xp)
     commit('refreshXP')
+<<<<<<< HEAD
   },
 
   dataObserver: async ({ state, commit }) => {
@@ -36,5 +37,7 @@ export default {
           commit('refreshXP', payload)
         }
       })
+=======
+>>>>>>> 102c7b42352cb50569cd6c7646d331e90dc795bb
   }
 }

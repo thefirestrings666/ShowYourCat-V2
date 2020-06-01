@@ -12,9 +12,6 @@ export const createNewUserFromFirebaseAuthUser = async firebaseAuthUser => {
   const user = {
     email,
     emailVerified,
-    user_coins: 0,
-    user_level: 1,
-    user_xp: 0,
     lastVoteTime: new Date()
   }
 
