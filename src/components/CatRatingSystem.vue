@@ -55,7 +55,7 @@ export default {
       setTimeout(() => (this.var_VoteSelected = 0), 0)
 
       Firebase.functions()
-        .httpsCallable('addXP')({ id: 'ok' })
+        .httpsCallable('addXP')({ data: 'id' })
         .then(newXP => {
           this.refreshXP(newXP)
           this.v_loading = false

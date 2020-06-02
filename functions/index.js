@@ -56,13 +56,12 @@ exports.SetNewUserData = functions.firestore
       .firestore()
       .doc('users/' + context.params.userId)
       .collection('userData')
-      .add({
+      .doc('d' + context.params.userId)
+      .set({
         level: 1,
         coins: 0,
         xp: 0
       })
 
-    const uppercase = original.toUpperCase()
-
-    return snap.ref.set({ uppercase }, { merge: true })
+    return snap.ref.get()
   })

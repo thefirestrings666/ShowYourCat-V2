@@ -4,7 +4,6 @@ import { isNil } from 'lodash'
 import { createNewUserFromFirebaseAuthUser } from '@/misc/helpers'
 
 import UsersDB from '@/firebase/users-db'
-import UsersDataDB from '@/firebase/users-db-data'
 
 export default {
   /**
@@ -14,19 +13,24 @@ export default {
     const userDb = new UsersDB()
     const userFromFirebase = await userDb.read(firebaseAuthUser.uid)
 
-    const user = isNil(userFromFirebase)
-      ? await createNewUserFromFirebaseAuthUser(firebaseAuthUser)
-      : userFromFirebase
+    // const user = isNil(userFromFirebase)
+    //   ? await createNewUserFromFirebaseAuthUser(firebaseAuthUser)
+    //   : userFromFirebase
+    let user = ''
+    if (isNil(userFromFirebase)) {
+      user = await createNewUserFromFirebaseAuthUser(firebaseAuthUser)
+    } else {
+      user = userFromFirebase
+    }
+    
+    // const userDataDb = new UsersDataDB(userFromFirebase.id)
+    // const userDataFromDB = await userDataDb.readAll()
+    // await userDataDb.read(userDataFromDB[0].id).then(response => {
+    //   user.coins = response.coins
+    //   user.level = response.level
+    //   user.user_xp = response.xp
+    // })
 
-    const userDataDb = new UsersDataDB(userFromFirebase.id)
-    const userDataFromDB = await userDataDb.readAll()
-    const userData = await userDataDb.read(userDataFromDB[0].id)
-
-    user.coins = userData.coins
-    user.level = userData.level
-    user.xp = userData.xp
-
-    console.log(user)
     if (userFromFirebase && !user.emailVerified) {
       await userDb.update({
         ...userFromFirebase,
