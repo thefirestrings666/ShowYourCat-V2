@@ -51,8 +51,7 @@ export default {
     ...mapActions('app', [
       'closeAddToHomeScreenModalForApple',
       'serviceWorkerSkipWaiting'
-    ]),
-    ...mapActions('userData', ['dataObserver'])
+    ])
   }
 }
 </script>
