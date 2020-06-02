@@ -4,6 +4,7 @@ import { isNil } from 'lodash'
 import { createNewUserFromFirebaseAuthUser } from '@/misc/helpers'
 
 import UsersDB from '@/firebase/users-db'
+import UserDataDB from '@/firebase/users-db-data'
 
 export default {
   /**
@@ -19,10 +20,22 @@ export default {
     let user = ''
     if (isNil(userFromFirebase)) {
       user = await createNewUserFromFirebaseAuthUser(firebaseAuthUser)
+      user.coins = 0
+      user.level = 1
+      user.user_xp = 0
     } else {
       user = userFromFirebase
+      console.log(firebase.auth().currentUser.uid)
+      const userDataDb = new UserDataDB()
+      await userDataDb
+        .read(`d${firebase.auth().currentUser.uid}`)
+        .then(response => {
+          user.coins = response.coins
+          user.level = response.level
+          user.user_xp = response.xp
+        })
     }
-    
+
     // const userDataDb = new UsersDataDB(userFromFirebase.id)
     // const userDataFromDB = await userDataDb.readAll()
     // await userDataDb.read(userDataFromDB[0].id).then(response => {
