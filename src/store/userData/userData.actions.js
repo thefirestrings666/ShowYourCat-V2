@@ -1,12 +1,12 @@
-import firebase from 'firebase'
-import UsersDB from '@/firebase/users-db'
+// import firebase from 'firebase'
+// import UsersDB from '@/firebase/users-db'
 
 export default {
   load_userData: async ({ commit }, user) => {
     const payload = {
-      coins: user.user_coins,
+      coins: user.coins,
       xp: user.user_xp,
-      level: user.user_level
+      level: user.level
     }
 
     commit('load_userData', payload)
@@ -16,9 +16,9 @@ export default {
     commit('setPictureToUpload', picture)
   },
 
-  refreshXP: async ({ commit }) => {
-    const UsersDb = await new UsersDB().read(firebase.auth().currentUser.uid)
-    console.log(UsersDb.user_xp)
-    commit('refreshXP')
+  refreshXP: async ({ commit }, xp) => {
+    if (xp.data !== 'Too fast') {
+      commit('refreshXP', xp.data)
+    }
   }
 }
