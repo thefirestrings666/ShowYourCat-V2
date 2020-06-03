@@ -5,7 +5,7 @@ export default {
   load_userData: async ({ commit }, user) => {
     const payload = {
       coins: user.coins,
-      xp: user.user_xp,
+      xp: user.xp,
       level: user.level
     }
 
