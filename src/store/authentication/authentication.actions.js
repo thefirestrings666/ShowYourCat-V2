@@ -4,7 +4,7 @@ import { isNil } from 'lodash'
 import { createNewUserFromFirebaseAuthUser } from '@/misc/helpers'
 
 import UsersDB from '@/firebase/users-db'
-import UserDataDB from '@/firebase/users-db-data'
+import UsersDataDB from '@/firebase/users-db-data'
 
 export default {
   /**
@@ -25,15 +25,15 @@ export default {
       user.user_xp = 0
     } else {
       user = userFromFirebase
-      console.log(firebase.auth().currentUser.uid)
-      const userDataDb = new UserDataDB()
-      await userDataDb
-        .read(`d${firebase.auth().currentUser.uid}`)
-        .then(response => {
-          user.coins = response.coins
-          user.level = response.level
-          user.user_xp = response.xp
-        })
+
+      // const dataId = `d${firebase.auth().currentUser.uid}`
+      const userDataDb = new UsersDataDB()
+
+      const userData = await userDataDb.read('dZauVdbn0PcP6Yp9x5m8XWshpMkZ2')
+      console.info(userData)
+      // user.coins = response.coins
+      // user.level = response.level
+      // user.user_xp = response.xp
     }
 
     // const userDataDb = new UsersDataDB(userFromFirebase.id)
