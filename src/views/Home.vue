@@ -1,7 +1,8 @@
 <template>
   <div v-if="user" key="user.emailVerified" class="page-wrapper">
     <CatRatingSystem v-if="user.emailVerified"> </CatRatingSystem>
-    <notActivated v-else> </notActivated>
+    <notActivated v-else-if="!user.emailVerified"> </notActivated>
+    <LoadingAnimation v-else></LoadingAnimation>
   </div>
   <div v-else-if="user === null" class="page-wrapper">
     <authentication> </authentication>

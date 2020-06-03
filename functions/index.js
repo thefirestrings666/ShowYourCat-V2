@@ -7,32 +7,37 @@ admin.initializeApp()
 exports.addXP = functions.https.onCall(async (req, context) => {
   const userID = context.auth.uid
 
-  const userData = await admin
+  const userInfo = await admin
     .firestore()
     .doc('users/' + userID)
     .get()
 
-  var timeDuringVotes = Date.now() - userData.data().lastVoteTime.seconds * 1000
+  const userData = await admin
+    .firestore()
+    .doc('users/' + userID + '/userData/d' + userID)
+    .get()
+
+  var timeDuringVotes = Date.now() - userInfo.data().lastVoteTime.seconds * 1000
 
   if (timeDuringVotes > 2500) {
     // Vote accepted
-    var xpToApply = (userData.data().user_xp += 15)
+    var xpToApply = (userData.data().xp += 15)
     const updateXP = await admin
       .firestore()
-      .doc('users/' + userID)
+      .doc('users/' + userID + '/userData/d' + userID)
       .update({
-        user_xp: (userData.data().user_xp += 15)
+        xp: (userData.data().xp += 15)
       })
   } else {
     console.info('Vote rejected : Too fast')
     return 'Too fast'
   }
 
-  const addVoteArchived = await admin
-    .firestore()
-    .doc('users/' + userID)
-    .collection('votesArchived')
-    .add({ original: 'original' })
+  // const addVoteArchived = await admin
+  //   .firestore()
+  //   .doc('users/' + userID)
+  //   .collection('votesArchived')
+  //   .add({ original: 'original' })
 
   const updateLastVote = await admin
     .firestore()
@@ -47,10 +52,7 @@ exports.addXP = functions.https.onCall(async (req, context) => {
 exports.SetNewUserData = functions.firestore
   .document('/users/{userId}')
   .onCreate(async (snap, context) => {
-    // Grab the current value of what was written to Cloud Firestore.
-    const original = snap.data().original
-
-    console.info(snap)
+    console.info(context)
 
     await admin
       .firestore()
@@ -63,5 +65,5 @@ exports.SetNewUserData = functions.firestore
         xp: 0
       })
 
-    return snap.ref.get()
+    return true
   })

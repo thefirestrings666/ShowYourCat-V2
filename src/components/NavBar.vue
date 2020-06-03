@@ -631,7 +631,7 @@
       <div class="userScore">
         <div>
           <h5>XP</h5>
-          <p v-if="xp">{{ xp }}</p>
+          <p v-if="xp || xp == 0">{{ xp }}</p>
           <p v-else>
             <svg
               width="20"
@@ -711,7 +711,7 @@
         </div>
         <div>
           <h5>LVL</h5>
-          <p v-if="level">{{ level }}</p>
+          <p v-if="level || level == 0">{{ level }}</p>
           <p v-else>
             <svg
               width="20"
@@ -791,7 +791,7 @@
         </div>
         <div>
           <h5>coins</h5>
-          <p v-if="coins">{{ coins }}</p>
+          <p v-if="coins || coins == 0">{{ coins }}</p>
           <p v-else>
             <svg
               width="20"
