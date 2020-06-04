@@ -412,18 +412,7 @@ export default {
         this.u_password
       )
 
-      firebase
-        .auth()
-        .currentUser.linkWithCredential(credential)
-        .then(
-          usercred => {
-            const { user } = usercred
-            console.log('Account linking success', user)
-          },
-          error => {
-            console.log('Account linking error', error)
-          }
-        )
+      firebase.auth().currentUser.linkWithCredential(credential)
     },
 
     loginByMail(email, password) {

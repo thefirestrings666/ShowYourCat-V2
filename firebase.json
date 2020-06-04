@@ -72,12 +72,6 @@
     },
     "database": {
       "port": 9000
-<<<<<<< HEAD
-=======
-    },
-    "ui": {
-      "enabled": true
->>>>>>> 8b9e57bdb57e71e32b8fedc23ebfc6b4181973a4
     }
   }
 }

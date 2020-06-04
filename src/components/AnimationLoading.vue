@@ -74,11 +74,38 @@
       </g>
     </svg>
     <h4>Loading...</h4>
+    <h4 v-if="v_Text_2">Still crafting your cat...</h4>
+    <h4 v-if="v_Text_3">Adding mustaches...</h4>
+    <h4 v-if="v_Text_4">Checking food...</h4>
+    <h4 v-if="v_Text_5">Fluffy generator : ON...</h4>
   </div>
 </template>
 
 <script>
-export default {}
+export default {
+  data() {
+    return {
+      v_Text_2: false,
+      v_Text_3: false,
+      v_Text_4: false,
+      v_Text_5: false
+    }
+  },
+  mounted() {
+    setTimeout(() => {
+      this.v_Text_2 = true
+    }, 1000)
+    setTimeout(() => {
+      this.v_Text_3 = true
+    }, 1500)
+    setTimeout(() => {
+      this.v_Text_4 = true
+    }, 2000)
+    setTimeout(() => {
+      this.v_Text_5 = true
+    }, 2500)
+  }
+}
 </script>
 
 <style lang="scss" scoped>

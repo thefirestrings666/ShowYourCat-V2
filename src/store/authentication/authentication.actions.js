@@ -37,25 +37,7 @@ export default {
       user.coins = userData.data().coins
       user.level = userData.data().level
       user.xp = userData.data().xp
-
-      // const userDataDb = new UserDataDB()
-      // await userDataDb
-      //   .read(`d${firebase.auth().currentUser.uid}`)
-      //   .then(response => {
-      //     user.coins = response.coins
-      //     user.level = response.level
-      //     user.user_xp = response.xp
-      //   })
     }
-
-    console.log(user.xp)
-    // const userDataDb = new UsersDataDB(userFromFirebase.id)
-    // const userDataFromDB = await userDataDb.readAll()
-    // await userDataDb.read(userDataFromDB[0].id).then(response => {
-    //   user.coins = response.coins
-    //   user.level = response.level
-    //   user.user_xp = response.xp
-    // })
 
     if (userFromFirebase && !user.emailVerified) {
       await userDb.update({
