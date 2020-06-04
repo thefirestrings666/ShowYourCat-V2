@@ -7,7 +7,7 @@
       @after-leave="animationDone"
       @after-enter="v_loading = false"
     >
-      <div v-show="loadingDone" class="component-wrapper">
+      <div v-show="loadingDone && voteDone" class="component-wrapper">
         <StarRating
           v-model="var_VoteSelected"
           :max-rating="6"
@@ -20,7 +20,9 @@
         <RandomCat :key="randomVar" @loadingDone="loadingIsDone"></RandomCat>
       </div>
     </transition>
-    <LoadingAnimation v-show="!loadingDone && v_loading"></LoadingAnimation>
+    <LoadingAnimation
+      v-show="(!loadingDone && v_loading) || !voteDone"
+    ></LoadingAnimation>
   </div>
 </template>
 
@@ -42,6 +44,7 @@ export default {
       var_VoteSelected: 0,
       starSize: 45,
       loadingDone: false,
+      voteDone: true,
       randomVar: 0,
       v_randomCat: true,
       v_loading: false
@@ -51,14 +54,15 @@ export default {
     vote_selected() {
       this.loadingDone = false
       this.loadingDone = false
+      this.voteDone = false
 
-      setTimeout(() => (this.var_VoteSelected = 0), 0)
+      setTimeout(() => (this.var_VoteSelected = 0), 0.1)
 
       Firebase.functions()
         .httpsCallable('addXP')({ data: 'id' })
         .then(newXP => {
           this.refreshXP(newXP)
-          this.v_loading = false
+          this.voteDone = true
         })
 
       // to do
