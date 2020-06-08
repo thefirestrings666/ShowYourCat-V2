@@ -1,29 +1,36 @@
 <template>
   <div class="wrapper">
-    <XPProgress></XPProgress>
+    <progress-bar :val="50" :max="100"></progress-bar>
     Current XP : {{ user_data.xp }} New XP : {{ xp }} XP Max : {{ xpMax }}
   </div>
 </template>
 
 <script>
 import { mapActions, mapState } from 'vuex'
-import XPProgress from 'k-progress'
+
+import ProgressBar from 'vue-simple-progress'
 
 export default {
   components: {
-    XPProgress
+    ProgressBar
   },
   props: {
     xp: Number
   },
+
   data() {
     return {
-      xpMax: 100
+      xpMax: 100,
+      convertedCurrentXp: 0
     }
   },
   computed: {
     ...mapState('userData', ['user_data'])
   },
+  mounted() {
+    this.convertedCurrentXp = (this.$props.xp / this.xpMax) * 100
+  },
+
   methods: { ...mapActions('userData', ['refreshXP']) }
 }
 </script>
@@ -34,15 +41,5 @@ export default {
   display: flex;
   flex-direction: column;
   align-items: center;
-
-  .progressBar {
-    width: 100%;
-    background-color: grey;
-    .progressLevel {
-      width: 0%;
-      height: 30px;
-      background-color: rgb(89, 89, 255);
-    }
-  }
 }
 </style>
