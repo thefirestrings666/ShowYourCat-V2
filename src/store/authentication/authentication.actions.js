@@ -23,6 +23,7 @@ export default {
       user.coins = 0
       user.level = 1
       user.xp = 0
+      user.xpToReach = 100
     } else {
       user = userFromFirebase
 
@@ -45,11 +46,27 @@ export default {
         emailVerified: firebaseAuthUser.emailVerified
       })
     }
+    user.emailVerified = firebaseAuthUser.emailVerified
 
-    commit('setUser', user)
+    // Loading xp to reach
+
+    const id = 'KpRejLP6zDeckYkmJYp4'
+    await firebase //  catching the level to reach
+      .firestore()
+      .collection(`appConfiguration/${id}/levelsGrid/`)
+      .where('lvl', '==', user.level)
+      .get()
+      .then(response => {
+        response.forEach(doc => {
+          user.xpToReach = doc.data().xpToReach
+        })
+      })
 
     // Initialise user
+    // dispatch('userData/setNextLevel', user, { root: true })
     dispatch('userData/load_userData', user, { root: true })
+
+    commit('setUser', user)
 
     // User activation
     if (!user.emailVerified) {
@@ -84,7 +101,6 @@ export default {
    */
   logout: ({ commit }) => {
     commit('setUser', null)
-    commit('products/setProducts', null, { root: true })
 
     const currentRouter = router.app.$route
     if (!(currentRouter.meta && currentRouter.meta.authNotRequired)) {

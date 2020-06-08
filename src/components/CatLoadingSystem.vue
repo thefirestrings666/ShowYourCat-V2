@@ -62,8 +62,13 @@ export default {
   align-items: center;
 
   .picture {
-    width: 75%;
+    // width: 95%;
+    max-height: 100vh;
     margin: 15px 5px;
+
+    @media screen and (max-width: 600px) {
+      width: 90%;
+    }
   }
 }
 </style>

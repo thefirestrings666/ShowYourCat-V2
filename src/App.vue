@@ -4,7 +4,9 @@
       :coins="user && user_data.coins"
       :xp="user && user_data.xp"
       :level="user && user_data.level"
+      :xp-to-reach="user && user_data.xpToReach"
     ></nav-bar>
+    
     <div class="main-wrapper">
       <router-view />
     </div>
@@ -114,7 +116,7 @@ body {
 
     .main-wrapper {
       width: 100%;
-      max-width: 600px;
+      max-width: 900px;
 
       .page-wrapper {
         display: flex;

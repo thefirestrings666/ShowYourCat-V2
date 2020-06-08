@@ -49,21 +49,37 @@ exports.addXP = functions.https.onCall(async (req, context) => {
   return xpToApply
 })
 
-exports.SetNewUserData = functions.firestore
-  .document('/users/{userId}')
-  .onCreate(async (snap, context) => {
-    console.info(context)
+// exports.SetNewUserData = functions.firestore
+//   .document('/users/{userId}')
+//   .onCreate(async (snap, context) => {
+//     console.info(context)
 
-    await admin
-      .firestore()
-      .doc('users/' + context.params.userId)
-      .collection('userData')
-      .doc('d' + context.params.userId)
-      .set({
-        level: 1,
-        coins: 0,
-        xp: 0
-      })
+//     await admin
+//       .firestore()
+//       .doc('users/' + context.params.userId)
+//       .collection('userData')
+//       .doc('d' + context.params.userId)
+//       .set({
+//         level: 1,
+//         coins: 0,
+//         xp: 0
+//       })
 
-    return true
-  })
+//     return true
+//   })
+
+exports.createUserData = functions.https.onCall(async (req, context) => {
+  console.info(req)
+  await admin
+    .firestore()
+    .doc('users/' + req.data)
+    .collection('userData')
+    .doc('d' + req.data)
+    .set({
+      level: 1,
+      coins: 0,
+      xp: 0
+    })
+
+  return true
+})

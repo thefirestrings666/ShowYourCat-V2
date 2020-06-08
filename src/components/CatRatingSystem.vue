@@ -24,8 +24,8 @@
         <RandomCat :key="randomVar" @loadingDone="loadingIsDone"></RandomCat>
       </div>
     </transition>
-    <div v-show="v_xpGenerator" :key="randomVar" class="component-wrapper">
-      <XPpopup :xp="u_xp"></XPpopup>
+    <div v-if="v_xpGenerator" :key="randomVar" class="component-wrapper">
+      <XPpopup :xp="u_xp" @closed="v_xpGenerator = false"></XPpopup>
     </div>
   </div>
 </template>
@@ -33,7 +33,7 @@
 <script>
 import StarRating from 'vue-star-rating'
 import Firebase from 'firebase'
-import { mapActions } from 'vuex'
+import { mapActions, mapState } from 'vuex'
 import XPpopup from './xpPopup.vue'
 import RandomCat from './CatLoadingSystem.vue'
 import LoadingAnimation from './AnimationLoading.vue'
@@ -58,6 +58,9 @@ export default {
       v_xpGenerator: false
     }
   },
+  computed: {
+    ...mapState('userData', ['user_data'])
+  },
   methods: {
     vote_selected() {
       this.loadingDone = false
@@ -69,7 +72,7 @@ export default {
         .httpsCallable('addXP')({ data: 'id' })
         .then(newXP => {
           this.randomVar += 1
-          this.u_xp = newXP.data
+          this.u_xp = newXP
           this.v_xpGenerator = true
 
           // this.refreshXP(newXP)
@@ -107,7 +110,7 @@ export default {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    max-width: 600px;
+    //max-width: 600px;
     padding: 15px 0px;
     // border: 1px solid;
     border-radius: 3px;
