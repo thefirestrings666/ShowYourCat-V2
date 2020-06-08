@@ -222,44 +222,57 @@ export default {
             if (file) {
               firebase
                 .storage()
-                .ref(`avatars/${firebase.auth().currentUser.uid}`)
+                .ref(`avatars/${response.user.id}`)
                 .putString(file, 'data_url') // Saving picture
-                .then(() => {
-                  firebase
-                    .storage()
-                    .ref(`avatars/${firebase.auth().currentUser.uid}`)
-                    .getDownloadURL()
-                    .then(downURL => {
-                      firebase
-                        .auth()
-                        .currentUser.updateProfile({
-                          photoURL: downURL
-                        })
-                        .then(() => {
-                          this.updateUserPictureLink(
-                            firebase.auth().currentUser.uid
-                          )
-                        })
-                    })
+              firebase
+                .firestore()
+                .doc(`/users/${response.user.id}`)
+                .update({
+                  hasAvatar: true
                 })
             } else {
-              firebase
-                .storage()
-                .ref('avatars/nopicture.png')
-                .getDownloadURL()
-                .then(downURL => {
-                  firebase
-                    .auth()
-                    .currentUser.updateProfile({
-                      photoURL: downURL
-                    })
-                    .then(() => {
-                      this.updateUserPictureLink(
-                        firebase.auth().currentUser.uid
-                      )
-                    })
-                })
+              firebase.auth().currentUser.updateProfile({
+                photoURL: false
+              })
             }
+
+            // .then(() => {
+            //   firebase
+            //     .storage()
+            //     .ref(`avatars/${firebase.auth().currentUser.uid}_600x600`)
+
+            //     .getDownloadURL()
+            //     .then(downURL => {
+            //       console.log(downURL)
+            //       firebase
+            //         .auth()
+            //         .currentUser.updateProfile({
+            //           photoURL: downURL
+            //         })
+            //         .then(() => {
+            //           this.updateUserPictureLink(
+            //             firebase.auth().currentUser.uid
+            //           )
+            //         })
+            //     })
+            // })
+            // } else {
+            //   firebase
+            //     .storage()
+            //     .ref('avatars/nopicture.png')
+            //     .getDownloadURL()
+            //     .then(downURL => {
+            //       firebase
+            //         .auth()
+            //         .currentUser.updateProfile({
+            //           photoURL: downURL
+            //         })
+            //         .then(() => {
+            //           this.updateUserPictureLink(
+            //             firebase.auth().currentUser.uid
+            //           )
+            //         })
+            //     })
 
             firebase
               .auth()

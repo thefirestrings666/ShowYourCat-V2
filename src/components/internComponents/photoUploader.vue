@@ -112,6 +112,14 @@ export default {
   flex-direction: row-reverse;
   margin-right: 15px;
   margin-bottom: 15px;
+  @media screen and (max-width: 600px) {
+    position: fixed;
+    display: block;
+    right: 5px;
+    bottom: 5px;
+    height: 40px;
+    width: 40px;
+  }
 
   .photoButton {
     height: 40px;
