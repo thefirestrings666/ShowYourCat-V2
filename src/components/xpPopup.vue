@@ -193,7 +193,7 @@ import Gsap from 'gsap'
 
 export default {
   components: {
-    ProgressBar
+    XPProgress
   },
   props: {
     xp: null
