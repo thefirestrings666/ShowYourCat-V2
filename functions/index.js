@@ -54,8 +54,6 @@ exports.addXP = functions.https.onCall(async (req, context) => {
 exports.triggerUserPicture = functions.storage
   .object()
   .onFinalize(async object => {
-    console.info(object)
-
     var userID = object.name.replace('avatars/', '')
     userID = userID.replace('_600x600', '')
 

@@ -991,7 +991,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters('authentication', ['isUserLoggedIn']),
+    ...mapGetters('authentication', ['isUserLoggedIn', 'getUpdatedPhoto']),
     ...mapState('authentication', ['user']),
     ...mapState('app', ['networkOnLine', 'appTitle', 'appShortTitle'])
   },
