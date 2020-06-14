@@ -14,9 +14,6 @@ export default {
     const userDb = new UsersDB()
     const userFromFirebase = await userDb.read(firebaseAuthUser.uid)
 
-    // const user = isNil(userFromFirebase)
-    //   ? await createNewUserFromFirebaseAuthUser(firebaseAuthUser)
-    //   : userFromFirebase
     let user = ''
     if (isNil(userFromFirebase)) {
       user = await createNewUserFromFirebaseAuthUser(firebaseAuthUser)
@@ -40,6 +37,22 @@ export default {
       user.xp = userData.data().xp
     }
 
+    // Listener for resized picture
+
+    if (user && !user.isPictureUpdated) {
+      firebase
+        .firestore()
+        .doc(`users/${firebase.auth().currentUser.uid}`)
+        .onSnapshot(snapshot => {
+          if (snapshot.data().isPictureUpdated === true) {
+            commit('setUserPictureResized', true)
+            console.log(snapshot)
+          }
+        })
+    }
+
+    // check if user is verified
+
     if (userFromFirebase && !user.emailVerified) {
       await userDb.update({
         ...userFromFirebase,
@@ -48,25 +61,36 @@ export default {
     }
     user.emailVerified = firebaseAuthUser.emailVerified
 
+    // getting the user picture
+    try {
+      await firebase
+        .storage()
+        .ref(firebase.auth().currentUser.photoURL)
+        .getDownloadURL()
+        .then(url => {
+          user.photoURL = url
+        })
+    } catch (errorM) {
+      user.photoURL = null
+    }
+
     // Loading xp to reach
 
-    const id = 'KpRejLP6zDeckYkmJYp4'
     await firebase //  catching the level to reach
       .firestore()
-      .collection(`appConfiguration/${id}/levelsGrid/`)
+      .collection(`appConfiguration/levelsGrid/levelsGrid/`)
       .where('lvl', '==', user.level)
       .get()
       .then(response => {
         response.forEach(doc => {
-          user.xpToReach = doc.data().xpToReach
+          user.xpToReach = doc.data().xpToReach // saving xpToReach
         })
       })
 
-    // Initialise user
     // dispatch('userData/setNextLevel', user, { root: true })
     dispatch('userData/load_userData', user, { root: true })
 
-    commit('setUser', user)
+    commit('setUser', user) // Initialise user
 
     // User activation
     if (!user.emailVerified) {
@@ -86,14 +110,14 @@ export default {
     commit('setUserDetails', firebase.auth().currentUser.displayName)
   },
 
-  updateUserPictureLink: async ({ commit }, id) => {
-    const userDb = new UsersDB()
-    const userFromFirebase = await userDb.read(id)
-    await userDb.update({
-      ...userFromFirebase,
-      photoURL: firebase.auth().currentUser.photoURL
-    })
-    commit('setUserPictureLink', firebase.auth().currentUser.photoURL)
+  getUserPicture: async pictureLink => {
+    firebase
+      .storage()
+      .ref(pictureLink)
+      .getDownloadURL()
+      .then(url => {
+        return url
+      })
   },
 
   /**

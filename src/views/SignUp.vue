@@ -133,6 +133,7 @@
 import firebase from 'firebase/app'
 import downscale from 'downscale'
 import { mapActions } from 'vuex'
+
 import BaseImageInput from '../components/internComponents/BaseImageInput.vue'
 
 export default {
@@ -216,88 +217,76 @@ export default {
         .auth()
         .createUserWithEmailAndPassword(this.u_mail, this.u_password)
         .then(response => {
+          const file = this.u_picture
+          let varPhotoURL = null
           if (response) {
-            const file = this.u_picture
-
             if (file) {
+              varPhotoURL = `avatars/${firebase.auth().currentUser.uid}_600x600`
               firebase
                 .storage()
-                .ref(`avatars/${response.user.id}`)
+                .ref(`avatars/${firebase.auth().currentUser.uid}`)
                 .putString(file, 'data_url') // Saving picture
+            } else {
+              varPhotoURL = 'avatars/nopicture.png'
+            }
+          }
+
+          response.user
+            .updateProfile({
+              photoURL: varPhotoURL
+            })
+            .then(() => {
               firebase
                 .firestore()
-                .doc(`/users/${response.user.id}`)
+                .doc(`/users/${firebase.auth().currentUser.uid}`)
                 .update({
-                  hasAvatar: true
+                  photoURL: varPhotoURL
                 })
-            } else {
-              firebase.auth().currentUser.updateProfile({
-                photoURL: false
-              })
-            }
-
-            // .then(() => {
-            //   firebase
-            //     .storage()
-            //     .ref(`avatars/${firebase.auth().currentUser.uid}_600x600`)
-
-            //     .getDownloadURL()
-            //     .then(downURL => {
-            //       console.log(downURL)
-            //       firebase
-            //         .auth()
-            //         .currentUser.updateProfile({
-            //           photoURL: downURL
-            //         })
-            //         .then(() => {
-            //           this.updateUserPictureLink(
-            //             firebase.auth().currentUser.uid
-            //           )
-            //         })
-            //     })
-            // })
-            // } else {
-            //   firebase
-            //     .storage()
-            //     .ref('avatars/nopicture.png')
-            //     .getDownloadURL()
-            //     .then(downURL => {
-            //       firebase
-            //         .auth()
-            //         .currentUser.updateProfile({
-            //           photoURL: downURL
-            //         })
-            //         .then(() => {
-            //           this.updateUserPictureLink(
-            //             firebase.auth().currentUser.uid
-            //           )
-            //         })
-            //     })
-
-            firebase
-              .auth()
-              .currentUser.updateProfile({
-                displayName: this.u_nickname
-              })
-              .then(() => {
-                this.updateUserDetails(firebase.auth().currentUser.uid)
-              })
-          }
+              this.sendEmail()
+            })
         })
-        .catch(error => {
-          // Handle Errors here.
-          const errorCode = error.code
-          const errorMessage = error.message
-          console.log(`${errorCode} - ${errorMessage}`)
-          this.errorEmail = errorMessage
-
-          // ...
-        })
-        .then(() => {
-          this.sendEmail()
-        })
-      // todo
     },
+
+    // .then(response => {
+    //   if (response) {
+    //     console.log(response.user.providerData[0])
+    //     const file = this.u_picture
+    //     let varPhotoURL = null
+
+    //     if (file) {
+    //       varPhotoURL = `avatars/${firebase.auth().currentUser.uid}`
+    //       firebase
+    //         .storage()
+    //         .ref(`avatars/${firebase.auth().currentUser.uid}`)
+    //         .putString(file, 'data_url') // Saving picture
+    //     } else {
+    //       varPhotoURL = 'avatars/nopicture.png'
+    //     }
+
+    //     firebase
+    //       .auth()
+    //       .currentUser.updateProfile({
+    //         displayName: this.u_nickname,
+    //         photoURL: varPhotoURL
+    //       })
+    //       .then(() => {
+    //         this.updateUserDetails(firebase.auth().currentUser.uid)
+    //       })
+    //   }
+    // })
+    // .catch(error => {
+    //   // Handle Errors here.
+    //   const errorCode = error.code
+    //   const errorMessage = error.message
+    //   console.log(`${errorCode} - ${errorMessage}`)
+    //   this.errorEmail = errorMessage
+
+    //   // ...
+    // })
+
+    // this.sendEmail()
+
+    // todo
 
     sendEmail() {
       firebase
