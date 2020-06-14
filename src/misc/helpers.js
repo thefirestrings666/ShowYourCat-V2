@@ -9,10 +9,13 @@ export const createNewUserFromFirebaseAuthUser = async firebaseAuthUser => {
   const providerData = firebaseAuthUser.providerData[0]
 
   const { email } = providerData
+  const { photoURL } = providerData
+
   // const { emailVerified } = firebaseAuthUser.emailVerified
   const userDb = new UsersDB()
   const user = {
     email,
+    photoURL,
     emailVerified: firebaseAuthUser.emailVerified,
     lastVoteTime: new Date()
   }

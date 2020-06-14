@@ -4,28 +4,6 @@ import firebase from 'firebase'
 
 export default {
   load_userData: async ({ commit }, user) => {
-    // const id = 'KpRejLP6zDeckYkmJYp4'
-    // // const idGrid = 'lvlGridId'
-    // const firebaseUser = firebase.auth().currentUser.uid
-
-    // const userDb = await firebase // Looking for the user
-    //   .firestore()
-    //   .doc(`/users/${firebaseUser}/userData/d${firebaseUser}`)
-    //   .get()
-
-    // const userLevel = userDb.data().level
-
-    // await firebase //  catching the level to reach
-    //   .firestore()
-    //   .collection(`appConfiguration/${id}/levelsGrid/`)
-    //   .where('lvl', '==', userLevel)
-    //   .get()
-    //   .then(response => {
-    //     response.forEach(doc => {
-    //       user.xpToReach = doc.data().xpToReach
-    //     })
-    //   })
-
     const payload = {
       coins: user.coins,
       xp: user.xp,

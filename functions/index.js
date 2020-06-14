@@ -1,5 +1,7 @@
 const functions = require('firebase-functions')
 const admin = require('firebase-admin')
+const { object } = require('firebase-functions/lib/providers/storage')
+const { replace } = require('lodash')
 const FieldValue = require('firebase-admin').firestore.FieldValue
 
 admin.initializeApp()
@@ -49,6 +51,23 @@ exports.addXP = functions.https.onCall(async (req, context) => {
   return xpToApply
 })
 
+exports.triggerUserPicture = functions.storage
+  .object()
+  .onFinalize(async object => {
+    console.info(object)
+
+    var userID = object.name.replace('avatars/', '')
+    userID = userID.replace('_600x600', '')
+
+    console.info(userID)
+    admin
+      .firestore()
+      .doc(`users/${userID}`)
+      .update({
+        isPictureUpdated: true
+      })
+    console.log(userID)
+  })
 // exports.SetNewUserData = functions.firestore
 //   .document('/users/{userId}')
 //   .onCreate(async (snap, context) => {

@@ -5,5 +5,6 @@ export default {
 
   activateUser: (state, value) => (state.user.emailVerified = value),
   setUserDetails: (state, value) => (state.user.displayName = value),
-  setUserPictureLink: (state, value) => (state.user.photoURL = value)
+  setUserPictureLink: (state, value) => (state.user.photoURL = value),
+  setUserPictureResized: (state, value) => (state.user.isPictureUpdated = value)
 }
