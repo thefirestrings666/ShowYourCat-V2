@@ -3,9 +3,9 @@
     <img alt="logo-bento" class="logo" src="@/assets/mail.svg" />
     <h4>Please activate hour account, check your mailbox !</h4>
     <div class="wrap">
-      <p>You didn't received activation mail ?</p>
+      <p>{{ txt_body }}</p>
       <div data-test="login-btn" class="login-btn" @click="resendActivation">
-        Send it again !
+        {{ txt_button }}
       </div>
     </div>
   </div>
@@ -15,12 +15,25 @@
 import firebase from 'firebase/app'
 
 export default {
+  data() {
+    return {
+      error_status: 0,
+      txt_body: "Didn't received ?",
+      txt_button: 'Send it again !'
+    }
+  },
   methods: {
     resendActivation() {
+      this.txt_body = 'A new activation key was sent to your mail box !'
       firebase
         .auth()
-        .getCurrentUser()
-        .sendEmailVerification()
+        .currentUser.sendEmailVerification()
+        .catch(error => {
+          console.log(error)
+          this.txt_button = 'Try again'
+          this.txt_body = 'Too many tries, please wait before trying again'
+          this.error_status = 1
+        })
     }
   }
 }

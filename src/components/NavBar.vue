@@ -880,7 +880,6 @@
             v-if="isUserLoggedIn && networkOnLine && user.isPictureUpdated"
             class="user-picture"
             :src="user.photoURL"
-            alt="Avatar"
             @click="logout"
           />
 
@@ -996,6 +995,10 @@ export default {
     ...mapState('app', ['networkOnLine', 'appTitle', 'appShortTitle'])
   },
   methods: {
+    async loadPicture() {
+      const userPicture = await firebase.storage().ref()
+      return userPicture
+    },
     async logout() {
       await firebase.auth().signOut()
     },

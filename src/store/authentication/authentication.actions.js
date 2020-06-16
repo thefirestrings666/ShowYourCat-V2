@@ -4,6 +4,7 @@ import { isNil } from 'lodash'
 import { createNewUserFromFirebaseAuthUser } from '@/misc/helpers'
 
 import UsersDB from '@/firebase/users-db'
+
 // import UserDataDB from '@/firebase/users-db-data'
 
 export default {
@@ -21,6 +22,7 @@ export default {
       user.level = 1
       user.xp = 0
       user.xpToReach = 100
+      user.isPictureUpdated = false
     } else {
       user = userFromFirebase
 
@@ -46,7 +48,13 @@ export default {
         .onSnapshot(snapshot => {
           if (snapshot.data().isPictureUpdated === true) {
             commit('setUserPictureResized', true)
-            console.log(snapshot)
+            firebase
+              .storage()
+              .ref(snapshot.data().photoURL)
+              .getDownloadURL()
+              .then(responseURL => {
+                commit('setUserPictureAfterResized', responseURL)
+              })
           }
         })
     }
