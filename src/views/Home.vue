@@ -1,6 +1,5 @@
 <template>
   <div v-if="user" key="user.emailVerified" class="page-wrapper">
-     {{ user }}
     <CatRatingSystem v-if="user.emailVerified"> </CatRatingSystem>
     <notActivated v-else-if="!user.emailVerified"> </notActivated>
     <LoadingAnimation v-else></LoadingAnimation>
@@ -10,7 +9,6 @@
   </div>
   <div v-else-if="user === undefined" class="page-wrapper">
     <LoadingAnimation></LoadingAnimation>
-   
   </div>
 </template>
 

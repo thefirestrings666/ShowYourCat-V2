@@ -876,11 +876,11 @@
         </div>
 
         <div class="userPicture">
+          {{ getUpdatedPhoto }}
           <img
-            v-if="isUserLoggedIn && networkOnLine && user.isPictureUpdated"
+            v-if="isUserLoggedIn && networkOnLine && getUpdatedPhoto"
             class="user-picture"
             :src="user.photoURL"
-            alt="Avatar"
             @click="logout"
           />
 
