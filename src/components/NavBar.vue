@@ -876,15 +876,18 @@
         </div>
 
         <div class="userPicture">
-          {{ getUpdatedPhoto }}
           <img
-            v-if="isUserLoggedIn && networkOnLine && getUpdatedPhoto"
+            v-if="
+              isUserLoggedIn &&
+                networkOnLine &&
+                getUpdatedPhoto.isPictureUpdated
+            "
             class="user-picture"
-            :src="user.photoURL"
+            :src="getUpdatedPhoto.photoURL"
             @click="logout"
           />
 
-          <p v-else-if="user.photoURL == null">
+          <p v-else-if="!getUpdatedPhoto.isPictureUpdated">
             <svg
               width="20"
               height="5"
@@ -997,7 +1000,10 @@ export default {
   },
   methods: {
     async loadPicture() {
-      const userPicture = await firebase.storage().ref()
+      const userPicture = await firebase
+        .storage()
+        .ref(`avatars/${firebase.auth().currentUser.uid}`)
+        .getDownloadURL()
       return userPicture
     },
     async logout() {

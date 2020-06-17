@@ -132,7 +132,7 @@
 <script>
 import firebase from 'firebase/app'
 import downscale from 'downscale'
-import { mapActions } from 'vuex'
+import { mapActions, mapMutations } from 'vuex'
 
 import BaseImageInput from '../components/internComponents/BaseImageInput.vue'
 
@@ -215,9 +215,10 @@ export default {
     async signUp() {
       firebase
         .auth()
-        .createUserWithEmailAndPassword(this.u_mail, this.u_password)
+        .createUserWithEmailAndPassword(this.u_mail, this.u_password) // Create the user with Mail
         .then(response => {
           const file = this.u_picture
+          let varIsPhotoUpdated = false // variable 
           let varPhotoURL = null
           if (response) {
             if (file) {
@@ -228,6 +229,7 @@ export default {
                 .putString(file, 'data_url') // Saving picture
             } else {
               varPhotoURL = 'avatars/nopicture.png'
+              varIsPhotoUpdated = true
             }
           }
 
@@ -240,53 +242,13 @@ export default {
                 .firestore()
                 .doc(`/users/${firebase.auth().currentUser.uid}`)
                 .update({
-                  photoURL: varPhotoURL
+                  photoURL: varPhotoURL,
+                  isPictureUpdated: varIsPhotoUpdated
                 })
               this.sendEmail()
             })
         })
     },
-
-    // .then(response => {
-    //   if (response) {
-    //     console.log(response.user.providerData[0])
-    //     const file = this.u_picture
-    //     let varPhotoURL = null
-
-    //     if (file) {
-    //       varPhotoURL = `avatars/${firebase.auth().currentUser.uid}`
-    //       firebase
-    //         .storage()
-    //         .ref(`avatars/${firebase.auth().currentUser.uid}`)
-    //         .putString(file, 'data_url') // Saving picture
-    //     } else {
-    //       varPhotoURL = 'avatars/nopicture.png'
-    //     }
-
-    //     firebase
-    //       .auth()
-    //       .currentUser.updateProfile({
-    //         displayName: this.u_nickname,
-    //         photoURL: varPhotoURL
-    //       })
-    //       .then(() => {
-    //         this.updateUserDetails(firebase.auth().currentUser.uid)
-    //       })
-    //   }
-    // })
-    // .catch(error => {
-    //   // Handle Errors here.
-    //   const errorCode = error.code
-    //   const errorMessage = error.message
-    //   console.log(`${errorCode} - ${errorMessage}`)
-    //   this.errorEmail = errorMessage
-
-    //   // ...
-    // })
-
-    // this.sendEmail()
-
-    // todo
 
     sendEmail() {
       firebase
@@ -320,7 +282,11 @@ export default {
       downscale(value, 200, 200, { quality: 1 }).then(dataV => {
         this.u_picture = dataV
       })
-    }
+    },
+    ...mapMutations('authentication', [
+      'setUserPictureResized',
+      'setUserPictureAfterResized'
+    ])
   }
 }
 </script>

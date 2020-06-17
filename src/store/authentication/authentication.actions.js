@@ -17,15 +17,16 @@ export default {
 
     let user = ''
     if (isNil(userFromFirebase)) {
-      user = await createNewUserFromFirebaseAuthUser(firebaseAuthUser)
+      // If no user existing
+      user = await createNewUserFromFirebaseAuthUser(firebaseAuthUser) // Creation of the user in DB
       user.coins = 0
       user.level = 1
       user.xp = 0
       user.xpToReach = 100
       user.isPictureUpdated = false
+      user.photoURL = 'avatars/nopicture.png'
     } else {
-      user = userFromFirebase
-
+      user = userFromFirebase // user from DB
       const userData = await firebase
         .firestore()
         .doc(
@@ -42,10 +43,12 @@ export default {
     // Listener for resized picture
 
     if (user && !user.isPictureUpdated) {
+      // basic test
       firebase
         .firestore()
         .doc(`users/${firebase.auth().currentUser.uid}`)
         .onSnapshot(snapshot => {
+          // snapshot of DB
           if (snapshot.data().isPictureUpdated === true) {
             commit('setUserPictureResized', true)
             firebase
@@ -56,6 +59,14 @@ export default {
                 commit('setUserPictureAfterResized', responseURL)
               })
           }
+        })
+    } else {
+      await firebase
+        .storage()
+        .ref('avatars/nopicture.png')
+        .getDownloadURL()
+        .then(url => {
+          user.photoURL = url
         })
     }
 
@@ -70,17 +81,27 @@ export default {
     user.emailVerified = firebaseAuthUser.emailVerified
 
     // getting the user picture
-    try {
-      await firebase
-        .storage()
-        .ref(firebase.auth().currentUser.photoURL)
-        .getDownloadURL()
-        .then(url => {
-          user.photoURL = url
-        })
-    } catch (errorM) {
-      user.photoURL = null
-    }
+    // try {
+    //   await firebase
+    //     .storage()
+    //     .ref(firebase.auth().currentUser.photoURL)
+    //     .getDownloadURL()
+    //     .then(url => {
+    //       user.photoURL = url
+    //     })
+    // } catch (errorM) {
+    //   //      user.photoURL = null
+    // }
+
+    // if (user.photoURL === 'avatars/nopicture.png') {
+    //   await firebase
+    //     .storage()
+    //     .ref('avatars/nopicture.png')
+    //     .getDownloadURL()
+    //     .then(url => {
+    //       user.photoURL = url
+    //     })
+    // }
 
     // Loading xp to reach
 

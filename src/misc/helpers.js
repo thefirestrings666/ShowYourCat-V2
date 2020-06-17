@@ -9,16 +9,15 @@ export const createNewUserFromFirebaseAuthUser = async firebaseAuthUser => {
   const providerData = firebaseAuthUser.providerData[0]
 
   const { email } = providerData
-  const { photoURL } = providerData
 
   // const { emailVerified } = firebaseAuthUser.emailVerified
   const userDb = new UsersDB()
   const user = {
     email,
-    photoURL,
+    photoURL: 'avatars/nopicture.png',
     emailVerified: firebaseAuthUser.emailVerified,
     lastVoteTime: new Date(),
-    isPictureUpdated: false
+    isPictureUpdated: true
   }
   userDb.create(user, firebaseAuthUser.uid).then(response => {
     Firebase.functions().httpsCallable('createUserData')({ data: response.id })
