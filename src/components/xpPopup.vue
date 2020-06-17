@@ -222,11 +222,17 @@ export default {
   mounted() {
     this.currentXP = this.user_data.xp
     this.xpMax = this.user_data.xpToReach
-    this.currentXP = this.xp.data
+    this.addXp()
+    // this.currentXP = this.xp.data
     this.refreshXP(this.xp)
   },
 
   methods: {
+    addXp() {
+      setTimeout(() => {
+        this.currentXP = this.xp.data
+      }, 200)
+    },
     back() {
       this.$emit('closed')
     },
@@ -279,35 +285,35 @@ export default {
   }
 }
 
-// @keyframes anim-footprint {
-//   0% {
-//     width: 0px;
-//   }
+@keyframes anim-footprint {
+  0% {
+    width: 0px;
+  }
 
-//   100% {
-//     width: 183px;
-//     transform: rotate(360deg);
-//   }
-// }
+  100% {
+    width: 183px;
+    transform: rotate(360deg);
+  }
+}
 
-// @keyframes anim-color {
-//   0% {
-//     opacity: 0;
-//   }
-//   20% {
-//     opacity: 0;
-//   }
-//   40% {
-//     opacity: 0;
-//   }
-//   40% {
-//     opacity: 1;
-//   }
-//   70% {
-//     opacity: 0;
-//   }
-//   100% {
-//     opacity: 1;
-//   }
-// }
+@keyframes anim-color {
+  0% {
+    opacity: 0;
+  }
+  20% {
+    opacity: 0;
+  }
+  40% {
+    opacity: 0;
+  }
+  40% {
+    opacity: 1;
+  }
+  70% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
 </style>
