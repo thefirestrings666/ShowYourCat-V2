@@ -876,9 +876,8 @@
         </div>
 
         <div class="userPicture">
-          {{ getUpdatedPhoto }}
           <img
-            v-if="isUserLoggedIn && networkOnLine && getUpdatedPhoto"
+            v-if="isUserLoggedIn && networkOnLine && user.isPictureUpdated"
             class="user-picture"
             :src="user.photoURL"
             @click="logout"
@@ -1003,7 +1002,6 @@ export default {
     async logout() {
       await firebase.auth().signOut()
     },
-
     goHome() {
       this.$router.push({ name: 'home' })
     }
@@ -1013,7 +1011,6 @@ export default {
 
 <style lang="scss" scoped>
 @import '@/theme/variables.scss';
-
 .navbar {
   display: flex;
   justify-content: space-between;
@@ -1028,55 +1025,44 @@ export default {
   // border-bottom: 1px solid #eaecef;
   // line-height: 1.55rem;
   width: 100%;
-
   .headerWrapper {
     width: 888px;
     margin: auto;
     display: flex;
     justify-content: space-between;
-
     @media (max-width: 888px) {
       width: 100%;
     }
-
     a {
       display: flex;
       align-items: center;
     }
-
     .title-desktop {
       display: inline;
     }
-
     .title-mobile {
       display: none;
     }
-
     @media (max-width: 500px) {
       // padding: 0.7rem 0.7rem;
-
       .can-hide {
         display: none;
       }
-
       .title-desktop {
         display: none;
       }
-
       .title-mobile {
         display: none;
         margin: auto;
         position: relative;
       }
     }
-
     .site-name {
       font-size: 1.3rem;
       font-weight: 600;
       color: $border-color;
       position: relative;
     }
-
     .logo {
       height: 35px;
       width: 35px;
@@ -1091,23 +1077,19 @@ export default {
       justify-content: flex-start;
       height: 59px;
       z-index: -1;
-
       .logo-middle {
         width: 40%;
         margin: auto;
         max-width: 200px;
-
         @media screen and (min-width: 600px) {
           width: 20%;
         }
       }
-
       .logo-middle-connected {
         // display: none;
         //  position: relative;
         //  margin: auto;
         width: 100%;
-
         @media screen and (min-width: 600px) {
           display: block;
           width: 20%;
@@ -1125,7 +1107,6 @@ export default {
       align-items: center;
       z-index: -1;
       justify-content: center;
-
       @media screen and (min-width: 600px) {
         display: flex;
         width: 100vw;
@@ -1136,23 +1117,19 @@ export default {
         height: 59px;
         z-index: -1;
       }
-
       .logo-middle {
         width: 75%;
-
         @media screen and (min-width: 600px) {
           width: 20%;
           margin: auto;
           max-width: 200px;
         }
       }
-
       .logo-middle-connected {
         // display: none;
         //  position: relative;
         //  margin: auto;
         width: 100%;
-
         @media screen and (min-width: 600px) {
           display: block;
           width: 20%;
@@ -1166,12 +1143,10 @@ export default {
     .userPanel {
       display: flex;
       flex-direction: row;
-
       .userScore {
         display: flex;
         flex-direction: row;
         justify-content: space-between;
-
         div {
           padding: 0px 10px;
           border-right: 1px solid;
@@ -1179,21 +1154,18 @@ export default {
           flex-direction: column;
           align-items: center;
           justify-content: space-around;
-
           p {
             margin: 10px 0px 0px 0px;
             font-size: 0.7em;
           }
         }
       }
-
       .userPicture {
         display: flex;
         flex-direction: row;
         margin: 0px 10px;
         align-items: center;
       }
-
       h5 {
         margin: 0px;
       }
@@ -1202,7 +1174,6 @@ export default {
         // position: absolute;
         // top: 0px;
         // right: 35px;
-
         div {
           // text-align: center;
           // display: flex;
@@ -1211,7 +1182,6 @@ export default {
           // align-content: flex-start;
           // border-right: 1px solid $border-color;
           // padding: 0px 10px;
-
           h5 {
             margin: 0px;
           }
@@ -1221,7 +1191,6 @@ export default {
         }
       }
     }
-
     &.offline {
       background: $navbar-offline-color;
       .links .nav-links .nav-item a,
@@ -1229,13 +1198,11 @@ export default {
         color: white;
       }
     }
-
     .user-picture {
       max-height: 45px;
       border-radius: 50%;
       cursor: pointer;
     }
-
     .offline-label {
       padding: 0px 10px;
       border: 1px solid white;
@@ -1243,11 +1210,9 @@ export default {
       color: white;
       margin-left: 1.5rem;
     }
-
     svg {
       fill: $blue-1;
     }
-
     svg:hover {
       cursor: pointer;
       fill: $hover;
