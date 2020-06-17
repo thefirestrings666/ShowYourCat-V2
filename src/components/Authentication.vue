@@ -407,12 +407,12 @@ export default {
         this.setUser(null)
       }
 
-      const credential = firebase.auth.EmailAuthProvider.credential(
-        this.u_mail,
-        this.u_password
-      )
+      // const credential = firebase.auth.EmailAuthProvider.credential(
+      //   this.u_mail,
+      //   this.u_password
+      // )
 
-      firebase.auth().currentUser.linkWithCredential(credential)
+      // firebase.auth().currentUser.linkWithCredential(credential)
     },
 
     loginByMail(email, password) {

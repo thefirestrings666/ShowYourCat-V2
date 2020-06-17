@@ -74,10 +74,7 @@
       </g>
     </svg>
     <h4>Loading...</h4>
-    <h4 v-if="v_Text_2">Still crafting your cat...</h4>
-    <h4 v-if="v_Text_3">Adding mustaches...</h4>
-    <h4 v-if="v_Text_4">Checking food...</h4>
-    <h4 v-if="v_Text_5">Fluffy generator : ON...</h4>
+    <h4>{{ textOutput }}</h4>
   </div>
 </template>
 
@@ -85,25 +82,36 @@
 export default {
   data() {
     return {
-      v_Text_2: false,
-      v_Text_3: false,
-      v_Text_4: false,
-      v_Text_5: false
+      table_text: [
+        'Still crafting your cat...',
+        'Adding mustaches...',
+        'Checking food...',
+        'Brushing the teeth...',
+        'Adding fluffy tail...',
+        'Making big eyes...'
+      ],
+      textOutput: null,
+      arrayPosition: 0,
+      arrayMax: 0
     }
   },
   mounted() {
-    setTimeout(() => {
-      this.v_Text_2 = true
-    }, 1000)
-    setTimeout(() => {
-      this.v_Text_3 = true
-    }, 1500)
-    setTimeout(() => {
-      this.v_Text_4 = true
-    }, 2000)
-    setTimeout(() => {
-      this.v_Text_5 = true
-    }, 2500)
+    this.arrayMax = this.table_text.length
+    console.log(this.arrayMax)
+    this.timer()
+  },
+  methods: {
+    timer() {
+      setTimeout(() => {
+        this.textOutput = this.table_text[this.arrayPosition].toString()
+        if (this.arrayPosition < this.arrayMax - 1) {
+          this.arrayPosition += 1
+        } else {
+          this.arrayPosition = 0
+        }
+        this.timer()
+      }, Math.random() * (2000 - 100) + 100)
+    }
   }
 }
 </script>
