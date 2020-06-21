@@ -13,11 +13,12 @@
         class="component-wrapper"
       >
         <StarRating
+          :key="refreshStars"
           v-model="var_VoteSelected"
           :max-rating="6"
           :show-rating="false"
           :rounded-corners="true"
-          :read-only="v_loading"
+          :read-only="v_loading && v_readOnly"
           :star-size="starSize"
           @rating-selected="vote_selected"
         ></StarRating>
@@ -55,7 +56,9 @@ export default {
       randomVar: 0,
       v_randomCat: true,
       v_loading: false,
-      v_xpGenerator: false
+      v_xpGenerator: false,
+      v_readOnly: false,
+      refreshStars: 10250
     }
   },
   computed: {
@@ -65,24 +68,20 @@ export default {
     vote_selected() {
       this.loadingDone = false
       this.voteDone = false
+      this.var_VoteSelected = 0
+      this.v_readOnly = true
+      this.refreshStars += 1
 
-      setTimeout(() => (this.var_VoteSelected = 0), 0)
+      setTimeout(() => (this.var_VoteSelected = 0), 10)
 
       Firebase.functions()
         .httpsCallable('addXP')({ data: 'id' })
         .then(newXP => {
           this.randomVar += 1
-          this.u_xp = newXP
+          this.u_xp = newXP.data.totalXP
           this.v_xpGenerator = true
-
-          // this.refreshXP(newXP)
-
-          // if (this.v_loading) {
           this.voteDone = true
-          // }
         })
-
-      // to do
     },
     animationDone() {
       this.randomVar += 1

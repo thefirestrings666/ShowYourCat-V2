@@ -25,7 +25,7 @@ export default {
   },
 
   setNextLevel: async ({ commit }) => {
-    const id = 'KpRejLP6zDeckYkmJYp4'
+    const id = 'levelsGrid'
     // const idGrid = 'lvlGridId'
     const firebaseUser = firebase.auth().currentUser.uid
 
@@ -46,5 +46,22 @@ export default {
           commit('updateXpToReach', doc.data().xpToReach)
         })
       })
+  },
+
+  levelUp: async ({ dispatch, commit, state }, payload) => {
+    const gameData = await firebase
+      .firestore()
+      .doc('/appConfiguration/gameData')
+      .get()
+
+    let newLevel = state.user_data.level
+    newLevel += 1
+    let newCoins = state.user_data.coins
+    newCoins += gameData.data().coinsPerLevelUp
+
+    dispatch('setNextLevel')
+    commit('updateXp', payload.newXp)
+    commit('updateLevel', newLevel)
+    commit('updateCoins', newCoins)
   }
 }

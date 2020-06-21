@@ -80,29 +80,6 @@ export default {
     }
     user.emailVerified = firebaseAuthUser.emailVerified
 
-    // getting the user picture
-    // try {
-    //   await firebase
-    //     .storage()
-    //     .ref(firebase.auth().currentUser.photoURL)
-    //     .getDownloadURL()
-    //     .then(url => {
-    //       user.photoURL = url
-    //     })
-    // } catch (errorM) {
-    //   //      user.photoURL = null
-    // }
-
-    // if (user.photoURL === 'avatars/nopicture.png') {
-    //   await firebase
-    //     .storage()
-    //     .ref('avatars/nopicture.png')
-    //     .getDownloadURL()
-    //     .then(url => {
-    //       user.photoURL = url
-    //     })
-    // }
-
     // Loading xp to reach
 
     await firebase //  catching the level to reach
@@ -116,7 +93,6 @@ export default {
         })
       })
 
-    // dispatch('userData/setNextLevel', user, { root: true })
     dispatch('userData/load_userData', user, { root: true })
 
     commit('setUser', user) // Initialise user
