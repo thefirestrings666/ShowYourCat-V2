@@ -877,15 +877,11 @@
 
         <div class="userPicture">
           <img
-<<<<<<< HEAD
-            v-if="isUserLoggedIn && networkOnLine && user.isPictureUpdated"
-=======
             v-if="
               isUserLoggedIn &&
                 networkOnLine &&
                 getUpdatedPhoto.isPictureUpdated
             "
->>>>>>> aa507b171fefddbac5ad7a86ce4753d53418688d
             class="user-picture"
             :src="getUpdatedPhoto.photoURL"
             @click="logout"
