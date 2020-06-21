@@ -19,16 +19,39 @@ exports.addXP = functions.https.onCall(async (req, context) => {
     .doc('users/' + userID + '/userData/d' + userID)
     .get()
 
+  var v_xpToReach = 0
+
+  const xpToReach = await admin
+    .firestore()
+    .collection(`appConfiguration/levelsGrid/levelsGrid/`)
+    .where('lvl', '==', userData.data().level)
+    .get()
+    .then(querydoc => {
+      querydoc.forEach(doc => {
+        v_xpToReach = doc.data().xpToReach
+      })
+    })
+
+  console.info(v_xpToReach)
+
   var timeDuringVotes = Date.now() - userInfo.data().lastVoteTime.seconds * 1000
 
   if (timeDuringVotes > 2500) {
     // Vote accepted
     var xpToApply = (userData.data().xp += 15)
-    const updateXP = await admin
+
+    var levelToApply = userData.data().level
+
+    if (xpToApply >= v_xpToReach) {
+      levelToApply += 1
+      xpToApply = xpToApply - v_xpToReach
+    }
+    await admin
       .firestore()
       .doc('users/' + userID + '/userData/d' + userID)
       .update({
-        xp: (userData.data().xp += 15)
+        xp: xpToApply,
+        level: levelToApply
       })
   } else {
     console.info('Vote rejected : Too fast')
@@ -66,24 +89,6 @@ exports.triggerUserPicture = functions.storage
       })
     console.log(userID)
   })
-// exports.SetNewUserData = functions.firestore
-//   .document('/users/{userId}')
-//   .onCreate(async (snap, context) => {
-//     console.info(context)
-
-//     await admin
-//       .firestore()
-//       .doc('users/' + context.params.userId)
-//       .collection('userData')
-//       .doc('d' + context.params.userId)
-//       .set({
-//         level: 1,
-//         coins: 0,
-//         xp: 0
-//       })
-
-//     return true
-//   })
 
 exports.createUserData = functions.https.onCall(async (req, context) => {
   console.info(req)

@@ -97,7 +97,6 @@ export default {
   },
   mounted() {
     this.arrayMax = this.table_text.length
-    console.log(this.arrayMax)
     this.timer()
   },
   methods: {
