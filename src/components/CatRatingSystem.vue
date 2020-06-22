@@ -18,7 +18,7 @@
           :max-rating="6"
           :show-rating="false"
           :rounded-corners="true"
-          :read-only="v_loading && v_readOnly"
+          :read-only="v_loading || v_readOnly"
           :star-size="starSize"
           @rating-selected="vote_selected"
         ></StarRating>
@@ -26,7 +26,7 @@
       </div>
     </transition>
     <div v-if="v_xpGenerator" :key="randomVar" class="component-wrapper">
-      <XPpopup :xp="u_xp" @closed="v_xpGenerator = false"></XPpopup>
+      <XPpopup :xp="u_xp" :xp2="old_xp" @closed="xpPopupClosed"></XPpopup>
     </div>
   </div>
 </template>
@@ -49,6 +49,7 @@ export default {
   data() {
     return {
       var_VoteSelected: 0,
+      old_xp: 0,
       u_xp: 0,
       starSize: 45,
       loadingDone: false,
@@ -64,6 +65,10 @@ export default {
   computed: {
     ...mapState('userData', ['user_data'])
   },
+  created() {
+    this.old_xp = this.user_data.xp
+  },
+
   methods: {
     vote_selected() {
       this.loadingDone = false
@@ -71,8 +76,6 @@ export default {
       this.var_VoteSelected = 0
       this.v_readOnly = true
       this.refreshStars += 1
-
-      setTimeout(() => (this.var_VoteSelected = 0), 10)
 
       Firebase.functions()
         .httpsCallable('addXP')({ data: 'id' })
@@ -92,6 +95,10 @@ export default {
     },
     timer() {
       setTimeout((this.v_loading = false), 500)
+    },
+    xpPopupClosed() {
+      this.v_xpGenerator = false
+      this.v_readOnly = false
     },
     ...mapActions('userData', ['refreshXP'])
   }

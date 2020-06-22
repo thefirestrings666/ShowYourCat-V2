@@ -9,6 +9,10 @@ admin.initializeApp()
 exports.addXP = functions.https.onCall(async (req, context) => {
   const userID = context.auth.uid
 
+  var returnPayload = {
+    totalXP: 0,
+    newXP: 0
+  }
   const userInfo = await admin
     .firestore()
     .doc('users/' + userID)
@@ -21,7 +25,7 @@ exports.addXP = functions.https.onCall(async (req, context) => {
 
   var v_xpToReach = 0
 
-  const xpToReach = await admin
+  await admin
     .firestore()
     .collection(`appConfiguration/levelsGrid/levelsGrid/`)
     .where('lvl', '==', userData.data().level)
@@ -32,19 +36,27 @@ exports.addXP = functions.https.onCall(async (req, context) => {
       })
     })
 
-  console.info(v_xpToReach)
+  const gameData = await admin
+    .firestore()
+    .doc(`appConfiguration/gameData`)
+    .get()
+
+  console.log(gameData.data())
 
   var timeDuringVotes = Date.now() - userInfo.data().lastVoteTime.seconds * 1000
 
   if (timeDuringVotes > 2500) {
     // Vote accepted
-    var xpToApply = (userData.data().xp += 15)
+    var xpToApply = (userData.data().xp += gameData.data().xpPerVote)
+    returnPayload.totalXP = xpToApply
+    returnPayload.newXP = xpToApply
 
     var levelToApply = userData.data().level
 
     if (xpToApply >= v_xpToReach) {
       levelToApply += 1
       xpToApply = xpToApply - v_xpToReach
+      returnPayload.newXP = xpToApply
     }
     await admin
       .firestore()
@@ -71,7 +83,7 @@ exports.addXP = functions.https.onCall(async (req, context) => {
       lastVoteTime: FieldValue.serverTimestamp()
     })
 
-  return xpToApply
+  return returnPayload
 })
 
 exports.triggerUserPicture = functions.storage
@@ -80,18 +92,15 @@ exports.triggerUserPicture = functions.storage
     var userID = object.name.replace('avatars/', '')
     userID = userID.replace('_600x600', '')
 
-    console.info(userID)
     admin
       .firestore()
       .doc(`users/${userID}`)
       .update({
         isPictureUpdated: true
       })
-    console.log(userID)
   })
 
 exports.createUserData = functions.https.onCall(async (req, context) => {
-  console.info(req)
   await admin
     .firestore()
     .doc('users/' + req.data)

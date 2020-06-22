@@ -192,7 +192,7 @@
           :max="xpMax"
           :size="23"
           :val="currentXP"
-          bar-transition="all 3.5s ease"
+          bar-transition="all 2s ease"
         />
         <p>{{ user_data.level + 1 }}</p>
       </div>
@@ -225,7 +225,8 @@ export default {
     XPProgress
   },
   props: {
-    xp: null
+    xp: null,
+    xp2: null
   },
 
   data() {
@@ -245,39 +246,65 @@ export default {
   },
 
   watch: {
+    // currentXP(newValue) {
+    //   Gsap.To(this.$data, {
+    //     tweenedNumber: newValue,
+    //     duration: 3.5
+    //   })
+    // }
     currentXP(newValue) {
-      Gsap.fromTo(this.$data, {}, { duration: 3.5, tweenedNumber: newValue })
+      Gsap.fromTo(
+        this.$data,
+        { tweenedNumber: this.xp2 },
+        {
+          tweenedNumber: newValue,
+          duration: 2,
+          onComplete: this.setLevelUp
+        }
+      )
     }
   },
   created() {
     this.currentXP = this.user_data.xp
-  },
-  mounted() {
-    this.currentXP = this.user_data.xp
     this.xpMax = this.user_data.xpToReach
-
     this.addXp()
-
-    this.refreshXP(this.xp)
   },
+  mounted() {},
 
   methods: {
     addXp() {
+      this.refreshXP(this.xp)
+
       setTimeout(() => {
         this.currentXP = this.xp
-        if (this.currentXP >= this.xpMax) {
-          this.v_lvlUpPopup = true
-          this.currentXP -= this.xpMax
-          const lvlUpPayload = {
-            newXp: this.currentXP
-          }
-          this.levelUp(lvlUpPayload)
-        }
-      }, 200)
+      }, 10)
+
+      // if (this.animatedNumber >= this.xpMax) {
+      //   console.log('hit')
+      //   this.v_lvlUpPopup = true
+      //   this.currentXP -= this.xpMax
+      //   const lvlUpPayload = {
+      //     newXp: this.currentXP
+      //   }
+      //   this.levelUp(lvlUpPayload)
+      // }
+
       setTimeout(() => {
         this.v_buttonOK = true
       }, 1000)
     },
+    setLevelUp() {
+      if (this.animatedNumber >= this.xpMax) {
+        console.log('hit')
+        this.v_lvlUpPopup = true
+        this.currentXP -= this.xpMax
+        const lvlUpPayload = {
+          newXp: this.currentXP
+        }
+        this.levelUp(lvlUpPayload)
+      }
+    },
+
     back() {
       this.$emit('closed')
     },
