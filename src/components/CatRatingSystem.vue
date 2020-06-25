@@ -34,7 +34,7 @@
 <script>
 import StarRating from 'vue-star-rating'
 import Firebase from 'firebase'
-import { mapActions, mapState } from 'vuex'
+import { mapActions, mapState, mapGetters } from 'vuex'
 import XPpopup from './xpPopup.vue'
 import RandomCat from './CatLoadingSystem.vue'
 import LoadingAnimation from './AnimationLoading.vue'
@@ -63,7 +63,8 @@ export default {
     }
   },
   computed: {
-    ...mapState('userData', ['user_data'])
+    ...mapState('userData', ['user_data']),
+    ...mapGetters('userData', ['getUpdatedUserData'])
   },
   created() {
     this.old_xp = this.user_data.xp
@@ -80,7 +81,7 @@ export default {
       Firebase.functions()
         .httpsCallable('addXP')({ data: 'id' })
         .then(newXP => {
-          this.randomVar += 1
+          // this.randomVar += 1
           this.u_xp = newXP.data.totalXP
           this.v_xpGenerator = true
           this.voteDone = true
@@ -97,6 +98,8 @@ export default {
       setTimeout((this.v_loading = false), 500)
     },
     xpPopupClosed() {
+      //  this.randomVar += 1
+      this.old_xp = this.getUpdatedUserData.xp
       this.v_xpGenerator = false
       this.v_readOnly = false
     },

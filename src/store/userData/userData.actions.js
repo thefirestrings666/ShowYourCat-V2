@@ -55,7 +55,7 @@ export default {
     let newLevel = state.user_data.level
     newLevel += 1
     let newCoins = state.user_data.coins
-    newCoins += gameData.data().coinsPerLevelUp
+    newCoins += gameData.data().coinsPerLevel
 
     dispatch('setNextLevel')
     commit('updateXp', payload.newXp)

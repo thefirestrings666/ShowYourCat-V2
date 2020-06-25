@@ -6,7 +6,7 @@
       :level="user && user_data.level"
       :xp-to-reach="user && user_data.xpToReach"
     ></nav-bar>
-    
+
     <div class="main-wrapper">
       <router-view />
     </div>
@@ -64,7 +64,8 @@ export default {
 
 body {
   margin: 0;
-  background: url('../src/assets/backgroundSV.svg') no-repeat fixed center;
+  background: url('../src/assets/backgroundSV.svg') no-repeat fixed center
+    #3f88c6;
   background-size: cover;
   background-position: top;
   -webkit-font-smoothing: antialiased;
