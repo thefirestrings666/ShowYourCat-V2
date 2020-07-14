@@ -32,9 +32,9 @@
 </template>
 
 <script>
+import { mapActions, mapState, mapGetters, mapMutations } from 'vuex'
 import StarRating from 'vue-star-rating'
 import Firebase from 'firebase'
-import { mapActions, mapState, mapGetters } from 'vuex'
 import XPpopup from './xpPopup.vue'
 import RandomCat from './CatLoadingSystem.vue'
 import LoadingAnimation from './AnimationLoading.vue'
@@ -58,6 +58,7 @@ export default {
       v_randomCat: true,
       v_loading: false,
       v_xpGenerator: false,
+      v_addNewCat: true,
       v_readOnly: false,
       refreshStars: 10250
     }
@@ -72,6 +73,7 @@ export default {
 
   methods: {
     vote_selected() {
+      this.setCameraOff()
       this.loadingDone = false
       this.voteDone = false
       this.var_VoteSelected = 0
@@ -103,7 +105,8 @@ export default {
       this.v_xpGenerator = false
       this.v_readOnly = false
     },
-    ...mapActions('userData', ['refreshXP'])
+    ...mapActions('userData', ['refreshXP']),
+    ...mapMutations('app', ['setCameraOff', 'setCameraOn'])
   }
 }
 </script>

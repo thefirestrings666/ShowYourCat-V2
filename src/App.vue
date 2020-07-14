@@ -11,6 +11,7 @@
       <router-view />
     </div>
     <PhotoUploader></PhotoUploader>
+
     <Footer class="footer"></Footer>
     <new-content-available-toastr
       v-if="newContentAvailable"
@@ -31,6 +32,7 @@ import { mapState, mapActions, mapGetters } from 'vuex'
 import NavBar from '@/components/NavBar'
 import Footer from '@/components/Footer'
 import PhotoUploader from '@/components/internComponents/photoUploader'
+
 import NewContentAvailableToastr from '@/components/NewContentAvailableToastr'
 import AppleAddToHomeScreenModal from '@/components/AppleAddToHomeScreenModal'
 
@@ -88,7 +90,7 @@ body {
     font-size: 16px;
     color: $blue-3;
     display: grid;
-    grid-template-rows: 3.6rem auto 3.6rem 3.6rem;
+    grid-template-rows: 3.6rem auto 3.6rem;
     min-height: 100vh;
     align-items: center;
     justify-items: center;
@@ -99,8 +101,9 @@ body {
 
     .new-content-available-toastr {
       position: absolute;
-      bottom: 10px;
-      right: 10px;
+      top: 0px;
+      left: 0px;
+      z-index: 20;
     }
 
     .apple-add-to-home-screen-modal {

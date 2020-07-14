@@ -20,14 +20,19 @@ export default {
 
 <style lang="scss" scoped>
 .wrapper {
-  padding: 10px 20px;
+  padding: 0px 0px;
   background-color: #333;
+  opacity: 0.9;
   color: white;
-  display: inline-block;
-  border-radius: 4px;
+  display: flex;
   z-index: 1;
+  width: 100vw;
+  height: 100vh;
+  justify-content: center;
+  align-items: center;
 
   .refresh-btn {
+    margin-left: 5px;
     text-decoration: underline;
     cursor: pointer;
   }

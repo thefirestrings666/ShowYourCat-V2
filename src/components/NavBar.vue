@@ -1270,6 +1270,12 @@ export default {
 
 <style lang="scss" scoped>
 @import '@/theme/variables.scss';
+
+@font-face {
+  font-family: 'softy';
+  src: url('../assets/font/softy-webfont.woff') format('woff');
+}
+
 .navbar {
   display: flex;
   justify-content: space-between;
@@ -1415,6 +1421,9 @@ export default {
           align-items: center;
           justify-content: space-around;
           p {
+            font-family: 'softy', -apple-system, BlinkMacSystemFont, Segoe UI,
+              Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans,
+              Helvetica Neue, sans-serif;
             margin: 0px 0px 0px 0px;
             font-size: 0.7em;
           }
