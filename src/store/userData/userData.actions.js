@@ -20,7 +20,7 @@ export default {
 
   refreshXP: async ({ commit }, xp) => {
     if (xp.data !== 'Too fast') {
-      commit('refreshXP', xp.data)
+      commit('refreshXP', xp)
     }
   },
 

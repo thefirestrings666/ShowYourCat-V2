@@ -77,6 +77,7 @@ export default {
       Firebase.functions()
         .httpsCallable('addXP')({ data: 'id' })
         .then(newXP => {
+          console.info(newXP.data)
           this.randomVar += 1
           this.u_xp = newXP.data.totalXP
           this.v_xpGenerator = true
