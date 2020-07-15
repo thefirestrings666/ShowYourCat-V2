@@ -19,13 +19,7 @@ export default {
   },
 
   refreshXP: async ({ commit }, xp) => {
-<<<<<<< HEAD
-    if (xp.data !== 'Too fast') {
-      commit('refreshXP', xp)
-    }
-=======
     commit('refreshXP', xp)
->>>>>>> b332db0c8039c113b44ae0dfe660945c9fcf5696
   },
 
   setNextLevel: async ({ commit }) => {
