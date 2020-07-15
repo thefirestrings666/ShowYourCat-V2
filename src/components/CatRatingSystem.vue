@@ -18,7 +18,7 @@
           :max-rating="6"
           :show-rating="false"
           :rounded-corners="true"
-          :read-only="v_loading && v_readOnly"
+          :read-only="v_loading || v_readOnly"
           :star-size="starSize"
           @rating-selected="vote_selected"
         ></StarRating>
@@ -26,15 +26,15 @@
       </div>
     </transition>
     <div v-if="v_xpGenerator" :key="randomVar" class="component-wrapper">
-      <XPpopup :xp="u_xp" @closed="v_xpGenerator = false"></XPpopup>
+      <XPpopup :xp="u_xp" :xp2="old_xp" @closed="xpPopupClosed"></XPpopup>
     </div>
   </div>
 </template>
 
 <script>
+import { mapActions, mapState, mapGetters, mapMutations } from 'vuex'
 import StarRating from 'vue-star-rating'
 import Firebase from 'firebase'
-import { mapActions, mapState } from 'vuex'
 import XPpopup from './xpPopup.vue'
 import RandomCat from './CatLoadingSystem.vue'
 import LoadingAnimation from './AnimationLoading.vue'
@@ -49,6 +49,7 @@ export default {
   data() {
     return {
       var_VoteSelected: 0,
+      old_xp: 0,
       u_xp: 0,
       starSize: 45,
       loadingDone: false,
@@ -57,28 +58,37 @@ export default {
       v_randomCat: true,
       v_loading: false,
       v_xpGenerator: false,
+      v_addNewCat: true,
       v_readOnly: false,
       refreshStars: 10250
     }
   },
   computed: {
-    ...mapState('userData', ['user_data'])
+    ...mapState('userData', ['user_data']),
+    ...mapGetters('userData', ['getUpdatedUserData'])
   },
+  created() {
+    this.old_xp = this.user_data.xp
+  },
+
   methods: {
     vote_selected() {
+      this.setCameraOff()
       this.loadingDone = false
       this.voteDone = false
       this.var_VoteSelected = 0
       this.v_readOnly = true
       this.refreshStars += 1
 
-      setTimeout(() => (this.var_VoteSelected = 0), 10)
-
       Firebase.functions()
         .httpsCallable('addXP')({ data: 'id' })
         .then(newXP => {
+<<<<<<< HEAD
           console.info(newXP.data)
           this.randomVar += 1
+=======
+          // this.randomVar += 1
+>>>>>>> b332db0c8039c113b44ae0dfe660945c9fcf5696
           this.u_xp = newXP.data.totalXP
           this.v_xpGenerator = true
           this.voteDone = true
@@ -94,7 +104,14 @@ export default {
     timer() {
       setTimeout((this.v_loading = false), 500)
     },
-    ...mapActions('userData', ['refreshXP'])
+    xpPopupClosed() {
+      //  this.randomVar += 1
+      this.old_xp = this.getUpdatedUserData.xp
+      this.v_xpGenerator = false
+      this.v_readOnly = false
+    },
+    ...mapActions('userData', ['refreshXP']),
+    ...mapMutations('app', ['setCameraOff', 'setCameraOn'])
   }
 }
 </script>

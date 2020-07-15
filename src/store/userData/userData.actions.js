@@ -19,9 +19,13 @@ export default {
   },
 
   refreshXP: async ({ commit }, xp) => {
+<<<<<<< HEAD
     if (xp.data !== 'Too fast') {
       commit('refreshXP', xp)
     }
+=======
+    commit('refreshXP', xp)
+>>>>>>> b332db0c8039c113b44ae0dfe660945c9fcf5696
   },
 
   setNextLevel: async ({ commit }) => {
@@ -57,7 +61,7 @@ export default {
     let newLevel = state.user_data.level
     newLevel += 1
     let newCoins = state.user_data.coins
-    newCoins += gameData.data().coinsPerLevelUp
+    newCoins += gameData.data().coinsPerLevel
 
     dispatch('setNextLevel')
     commit('updateXp', payload.newXp)

@@ -50,14 +50,18 @@ export default {
         .onSnapshot(snapshot => {
           // snapshot of DB
           if (snapshot.data().isPictureUpdated === true) {
-            commit('setUserPictureResized', true)
-            firebase
-              .storage()
-              .ref(snapshot.data().photoURL)
-              .getDownloadURL()
-              .then(responseURL => {
-                commit('setUserPictureAfterResized', responseURL)
-              })
+            try {
+              commit('setUserPictureResized', true)
+              firebase
+                .storage()
+                .ref(snapshot.data().photoURL)
+                .getDownloadURL()
+                .then(responseURL => {
+                  commit('setUserPictureAfterResized', responseURL)
+                })
+            } catch {
+              console.info('Picture not catched')
+            }
           }
         })
     } else {

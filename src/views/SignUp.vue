@@ -218,7 +218,7 @@ export default {
         .createUserWithEmailAndPassword(this.u_mail, this.u_password) // Create the user with Mail
         .then(response => {
           const file = this.u_picture
-          let varIsPhotoUpdated = false // variable 
+          let varIsPhotoUpdated = false // variable
           let varPhotoURL = null
           if (response) {
             if (file) {

@@ -58,6 +58,20 @@
         @change="onSelectFile"
       />
     </div>
+    <transition
+      name="fxPopup"
+      enter-active-class="animated bounceInRight"
+      leave-active-class="animated fadeOut slow"
+    >
+      <div v-if="v_popupNewCat" class="popup-noCat">
+        <p>You have no cat registred !</p>
+        <router-link to="/home">
+          <div data-test="btn" class="btn">
+            Add my cat !
+          </div>
+        </router-link>
+      </div>
+    </transition>
   </div>
 </template>
 
@@ -67,7 +81,8 @@ import { mapGetters, mapActions, mapState } from 'vuex'
 export default {
   data() {
     return {
-      imageData: null
+      imageData: null,
+      v_popupNewCat: false
     }
   },
   computed: {
@@ -77,7 +92,8 @@ export default {
   },
   methods: {
     selectFile() {
-      this.$refs.fileInput.click()
+      // this.$refs.fileInput.click()
+      this.v_popupNewCat = true
     },
     onSelectFile(imageReturned) {
       const input = imageReturned.target
@@ -105,26 +121,24 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import '@/theme/variables.scss';
 .uploadButton {
-  display: flex;
-  width: 100%;
-  align-content: flex-end;
-  flex-direction: row-reverse;
-  margin-right: 15px;
-  margin-bottom: 15px;
+  position: fixed;
+  display: block;
+  right: 0px;
+  bottom: 60px;
+
   @media screen and (max-width: 600px) {
     position: fixed;
     display: block;
-    right: 5px;
-    bottom: 5px;
-    height: 40px;
-    width: 40px;
+    right: 0px;
+    bottom: 0px;
   }
 
   .photoButton {
+    margin: 10px;
     height: 40px;
     width: 40px;
-    // display: block;
     background: rgb(255, 245, 234);
     border-radius: 100px;
     border: #471d00 5px solid;
@@ -138,25 +152,40 @@ export default {
       width: 60%;
       height: 60%;
     }
+  }
 
-    //   width: 40px;
-    //   height: 40px;
-    //   border-radius: 100px;
-    //   border: #471d00 5px solid;
-    //   display: block;
-    //   bottom: 10px;
-    //   right: 10px;
-    //   padding: 10px;
-    //   background: rgb(255, 245, 234);
+  .popup-noCat {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: $base-grey;
+    -webkit-box-shadow: $box-shadow-1;
+    -moz-box-shadow: $box-shadow-1;
+    box-shadow: $box-shadow-1;
+    bottom: 70px;
+    right: 0px;
+    padding: 10px;
+    width: 320px;
 
-    //   @media screen and (min-width: 495px) {
-    //     bottom: 70px;
-    //     right: 10px;
-    //   }
-    //   @media screen and (min-width: 1000px) {
-    //     bottom: 70px;
-    //     right: 20px;
-    //   }
+    p {
+      text-align: center;
+      font-size: 0.8em;
+    }
+    .btn {
+      background-color: $jaune-1;
+      margin: 5px;
+      cursor: pointer;
+      padding: 5px 20px;
+      border: 1px solid;
+      display: inline-block;
+      border-radius: 3px;
+      border-color: $border-color;
+
+      &:hover {
+        background-color: $background-over;
+      }
+    }
   }
 }
 
