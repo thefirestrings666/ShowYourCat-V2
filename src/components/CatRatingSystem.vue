@@ -83,12 +83,7 @@ export default {
       Firebase.functions()
         .httpsCallable('addXP')({ data: 'id' })
         .then(newXP => {
-<<<<<<< HEAD
-          console.info(newXP.data)
-          this.randomVar += 1
-=======
           // this.randomVar += 1
->>>>>>> b332db0c8039c113b44ae0dfe660945c9fcf5696
           this.u_xp = newXP.data.totalXP
           this.v_xpGenerator = true
           this.voteDone = true
