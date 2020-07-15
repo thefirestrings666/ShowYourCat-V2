@@ -74,6 +74,14 @@ const router = new Router({
         )
     },
     {
+      path: '/addCat',
+      name: 'addCat',
+      component: () =>
+        import(
+          /* webpackChunkName: "client-chunk-upload" */ '@/views/addCat.vue'
+        )
+    },
+    {
       path: '/verification',
       name: 'userVerification',
       meta: {

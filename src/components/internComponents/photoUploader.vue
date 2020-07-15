@@ -61,12 +61,12 @@
     <transition
       name="fxPopup"
       enter-active-class="animated bounceInRight"
-      leave-active-class="animated fadeOut slow"
+      leave-active-class="animated bounceOutRight"
     >
       <div v-if="v_popupNewCat" class="popup-noCat">
-        <p>You have no cat registred !</p>
-        <router-link to="/home">
-          <div data-test="btn" class="btn">
+        <p>You have no cat registred yet !</p>
+        <router-link to="/addCat">
+          <div data-test="btn" class="btn" @click="v_popupNewCat = false">
             Add my cat !
           </div>
         </router-link>
