@@ -1,6 +1,11 @@
 <template>
   <div class="base-image-input">
-    <span v-if="!imageData" class="placeholder" @click="chooseImage">
+    <span
+      v-if="!imageData"
+      :style="style"
+      class="placeholder"
+      @click="chooseImage"
+    >
       Choose an Image
     </span>
     <input
@@ -46,6 +51,9 @@ export default {
   components: {
     Cropper
   },
+  props: {
+    color: { type: String }
+  },
   data() {
     return {
       imageData: null,
@@ -62,7 +70,11 @@ export default {
       v_preview: false
     }
   },
-
+  computed: {
+    style() {
+      return `border: ${this.color}`
+    }
+  },
   methods: {
     chooseImage() {
       this.$refs.fileInput.click()
@@ -124,11 +136,13 @@ export default {
   padding: 5px;
 }
 .placeholder {
-  background: #f0f0f0;
+  background: #e0e0e0;
   width: 250px;
   height: 250px;
   display: flex;
   justify-content: center;
+  border-radius: 250px;
+  border: solid 2 px #e0e0e0;
   align-items: center;
   color: #333;
   font-size: 18px;
