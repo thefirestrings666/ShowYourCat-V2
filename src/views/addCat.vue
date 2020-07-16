@@ -8,11 +8,8 @@
       </div>
       <date-picker
         v-model="v_date"
-        is-inline
-        :input-props="{
-          class: 'datepicker',
-          placeholder: 'hihihi'
-        }"
+        :popover="{ placement: 'bottom', visibility: 'click' }"
+        class="datePicker"
       />
       <div class="field-aera flex">
         <div data-test="login-btn" class="login-btn">
@@ -60,7 +57,7 @@ export default {
   max-width: 600px;
   width: 100%;
   align-items: center;
-  padding: 15px 0px;
+  padding: 15px 15px;
   //border: 1px solid;
   border-radius: 3px;
   background-color: rgba(255, 255, 255, 0.9);
@@ -92,7 +89,8 @@ export default {
     justify-content: space-between;
   }
 
-  input {
+  input,
+  .datePicker {
     width: 75%;
     padding: 10px;
     border-radius: 3px;
