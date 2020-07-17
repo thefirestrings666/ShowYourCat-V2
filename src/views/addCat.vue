@@ -1,18 +1,24 @@
 <template>
   <div class="page-wrapper">
     <div class="component-wrapper">
-      <h4>Let's add your cat !</h4>
-      <base-image-input />
+      <base-image-input
+        :color="borderError"
+        :p-text="picText"
+      ></base-image-input>
       <div class="field-aera">
-        <input v-model="v_name" type="text" placeholder="Name (mandatory)" />
+        <input
+          v-model="v_name"
+          type="text"
+          placeholder="Name (mandatory)"
+          :style="style"
+        />
       </div>
-      <date-picker
-        v-model="v_date"
-        :popover="{ placement: 'bottom', visibility: 'click' }"
-        class="datePicker"
-      />
+      <div class="field-aera">
+        <label>Birthday</label>
+        <date-picker v-model="v_date" is-inline />
+      </div>
       <div class="field-aera flex">
-        <div data-test="login-btn" class="login-btn">
+        <div data-test="login-btn" class="login-btn" @click="testData">
           Okay !
         </div>
         <router-link to="/home">
@@ -40,11 +46,23 @@ export default {
       v_date: new Date(2020, 1, 1),
       v_name: '',
       v_age: '',
+      borderError: '#fc0303',
+      picText: 'Pick a pic !',
 
       mode: 'single'
     }
   },
-  methods: {}
+  computed: {
+    style() {
+      return `border: ${this.borderError}`
+    }
+  },
+  methods: {
+    testData() {
+      this.borderError = '1px solid #fc0303'
+      console.log('Okey')
+    }
+  }
 }
 </script>
 
@@ -80,7 +98,12 @@ export default {
     display: flex;
     flex-direction: column;
     align-items: center;
+    margin-top: 15px;
     margin-bottom: 5px;
+  }
+
+  label {
+    margin-bottom: 10px;
   }
 
   .flex {

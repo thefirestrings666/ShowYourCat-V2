@@ -1,8 +1,14 @@
 <template>
   <div class="base-image-input">
-    <span v-if="!imageData" class="placeholder" @click="chooseImage">
-      Choose an Image
+    <span
+      v-if="!imageData"
+      :style="style"
+      class="placeholder"
+      @click="chooseImage"
+    >
+      {{ pText }}
     </span>
+
     <input
       ref="fileInput"
       class="file-input"
@@ -12,7 +18,7 @@
     />
 
     <cropper
-      v-if="imageData && !v_preview"
+      v-if="imageData && !v_preview && !vloading"
       ref="cropper"
       classname="cropper"
       image-classname="bPencil"
@@ -26,6 +32,7 @@
         areaClassname: 'areaClass'
       }"
     ></cropper>
+    <Loading v-if="vloading"></Loading>
     <div v-if="v_preview" class="cropper-result">
       <img :src="imageData" />
     </div>
@@ -41,16 +48,24 @@
 
 <script>
 import { Cropper, CircleStencil } from 'vue-advanced-cropper'
+import Loading from '../AnimationLoadingData.vue'
 
 export default {
   components: {
-    Cropper
+    Cropper,
+    Loading
+  },
+  props: {
+    color: { type: String },
+    pText: { type: String, default: 'Add a picture' }
   },
   data() {
     return {
       imageData: null,
       imageDataComplete: false,
       imageJPG: null,
+
+      vloading: false,
 
       CircleStencil,
       coordinates: {
@@ -62,7 +77,11 @@ export default {
       v_preview: false
     }
   },
-
+  computed: {
+    style() {
+      return `border: ${this.color}`
+    }
+  },
   methods: {
     chooseImage() {
       this.$refs.fileInput.click()
@@ -72,8 +91,12 @@ export default {
       // const { files } = input
       if (input.files && input.files[0]) {
         const reader = new FileReader()
-        reader.onload = e => {
+        reader.onprogress = () => {
+          this.vloading = true
+        }
+        reader.onloadend = e => {
           this.imageData = e.target.result
+          this.vloading = false
         }
 
         reader.readAsDataURL(input.files[0])
@@ -124,11 +147,13 @@ export default {
   padding: 5px;
 }
 .placeholder {
-  background: #f0f0f0;
+  background: #e0e0e0;
   width: 250px;
   height: 250px;
   display: flex;
   justify-content: center;
+  border-radius: 250px;
+  border: solid 2 px #e0e0e0;
   align-items: center;
   color: #333;
   font-size: 18px;
