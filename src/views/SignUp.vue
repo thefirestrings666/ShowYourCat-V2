@@ -113,7 +113,7 @@
       <div class="field-aera flex">
         <label>Import your cat :</label>
 
-        <base-image-input @img_selected="updateUserPicture" />
+        <base-image-input />
       </div>
       <div class="field-aera flex">
         <div data-test="login-btn" class="login-btn" @click="signUp_validation">
@@ -131,7 +131,6 @@
 
 <script>
 import firebase from 'firebase/app'
-import downscale from 'downscale'
 import { mapActions, mapMutations } from 'vuex'
 
 import BaseImageInput from '../components/internComponents/BaseImageInput.vue'
@@ -222,7 +221,7 @@ export default {
           let varPhotoURL = null
           if (response) {
             if (file) {
-              varPhotoURL = `avatars/${firebase.auth().currentUser.uid}_600x600`
+              varPhotoURL = `avatars/${firebase.auth().currentUser.uid}`
               firebase
                 .storage()
                 .ref(`avatars/${firebase.auth().currentUser.uid}`)
@@ -277,12 +276,7 @@ export default {
       this.errorPassword = ''
       this.errorPassword2 = ''
     },
-    updateUserPicture(value) {
-      this.u_picture = value
-      downscale(value, 200, 200, { quality: 1 }).then(dataV => {
-        this.u_picture = dataV
-      })
-    },
+
     ...mapMutations('authentication', [
       'setUserPictureResized',
       'setUserPictureAfterResized'

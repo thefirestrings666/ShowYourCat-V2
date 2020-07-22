@@ -39,6 +39,8 @@
     "nvm": "0.0.4",
     "pwacompat": "^2.0.15",
     "register-service-worker": "^1.7.1",
+    "resize-base64": "^1.0.12",
+    "sharp": "^0.25.4",
     "svg-loader": "0.0.2",
     "v-calendar": "^1.0.8",
     "vue": "^2.6.10",

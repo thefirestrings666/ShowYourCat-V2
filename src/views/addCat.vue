@@ -2,8 +2,21 @@
   <div class="page-wrapper">
     <div class="component-wrapper">
       <base-image-input
-        :color="borderError"
+        :key="resetUploader"
+        :color-placeholder="borderErrorPlaceholder"
         :p-text="picText"
+        :color-crop-button="borderCropButton"
+        @is-cropped="isCropped = true"
+        @input="
+          borderCropButton = ''
+          borderErrorPlaceholder = ''
+        "
+        @cropped="isImage = true"
+        @reset="
+          resetUploader += 25
+          isImage = false
+          borderErrorPlaceholder = ''
+        "
       ></base-image-input>
       <div class="field-aera">
         <input
@@ -43,11 +56,17 @@ export default {
   },
   data() {
     return {
-      v_date: new Date(2020, 1, 1),
+      v_date: null,
       v_name: '',
       v_age: '',
+      isImage: false,
+      isCropped: false,
       borderError: '#fc0303',
+      borderErrorPlaceholder: '',
+      borderCropButton: '',
       picText: 'Pick a pic !',
+
+      resetUploader: 412,
 
       mode: 'single'
     }
@@ -59,8 +78,31 @@ export default {
   },
   methods: {
     testData() {
-      this.borderError = '1px solid #fc0303'
-      console.log('Okey')
+      if (!this.isCropped) {
+        this.borderCropButton = 'border-color: red; color: #fc0303 '
+      } else {
+        this.borderCropButton = ''
+      }
+
+      if (!this.v_name) {
+        this.borderError = '1px solid #fc0303'
+      } else {
+        this.borderError = '#fc0303'
+      }
+
+      if (!this.isImage) {
+        this.borderErrorPlaceholder = 'stroke: red '
+      } else {
+        this.borderErrorPlaceholder = 'stroke: red'
+      }
+
+      if (!this.v_date) {
+        this.v_date = ''
+      }
+
+      if (this.v_name && this.isImage) {
+        console.log('OK for creation')
+      }
     }
   }
 }
