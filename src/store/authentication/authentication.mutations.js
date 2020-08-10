@@ -7,5 +7,9 @@ export default {
   setUserDetails: (state, value) => (state.user.displayName = value),
   setUserPictureLink: (state, value) => (state.user.photoURL = value),
   setUserPictureAfterResized: (state, value) => (state.user.photoURL = value),
-  setUserPictureResized: (state, value) => (state.user.isPictureUpdated = value)
+  setUserPictureResized: (state, value) =>
+    (state.user.isPictureUpdated = value),
+
+  updateUserCat: (state, value) => (state.user.cat = value),
+  updateUserCatID: (state, value) => (state.user.cat.id = value)
 }

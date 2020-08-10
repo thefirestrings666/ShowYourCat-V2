@@ -143,10 +143,10 @@ export default {
     return {
       v_spanner: true,
 
-      u_nickname: '',
-      u_mail: '',
-      u_password: '',
-      u_password2: '',
+      u_nickname: 'aa',
+      u_mail: 'aaaaa@aaa.aa',
+      u_password: 'aaaaaa',
+      u_password2: 'aaaaaa',
       u_picture: null,
       u_pictureUrl: null,
 

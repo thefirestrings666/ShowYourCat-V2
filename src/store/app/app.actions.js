@@ -22,20 +22,6 @@ export default {
     state.SWRegistrationForNewContent.waiting.postMessage('skipWaiting')
   },
 
-  addPictureDB: async (context, payload) => {
-    const userFromFirebase = await Firebase.auth().currentUser
-    const CatPicturesDb = new CatPicturesDB()
-
-    await CatPicturesDb.create({
-      userID: userFromFirebase.uid,
-      pictureID: `${payload.PictureId}_600x600`,
-
-      title: payload.title,
-      votes: 0,
-      approved: false
-    })
-  },
-
   loadRandomCat: async pictureURL => {
     const CatPicturesDb = new CatPicturesDB()
 

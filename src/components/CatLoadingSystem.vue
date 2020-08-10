@@ -27,7 +27,7 @@ export default {
     async loadRandomCat() {
       const CatPicturesDb = new CatPicturesDB()
 
-      const allPictures = await CatPicturesDb.readAll()
+      const allPictures = await CatPicturesDb.readAll([['resized', '==', true]])
 
       const random = Math.floor(Math.random() * Math.floor(allPictures.length))
 

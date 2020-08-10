@@ -126,59 +126,17 @@ export default {
     cropPreview() {
       this.vloading = true
       const { canvas } = this.$refs.cropper.getResult()
+
       this.vloading = false
       this.v_preview = true
       this.imageData = this.roundEdges(canvas).toDataURL()
-      // const imgRef = this.$refs.imgPreview.getResult()
-      // console.log(imgRef)
+      this.$emit('picture', this.imageData)
       this.imageDataComplete = true
     },
     resetComp() {
       this.imageData = null
       this.v_preview = false
       this.$emit('reset')
-    },
-    resizebase64(base64, maxWidth, maxHeight) {
-      // Max size for thumbnail
-      if (typeof maxWidth === 'undefined') maxWidth = 500
-      if (typeof maxHeight === 'undefined') maxHeight = 500
-
-      // Create and initialize two canvas
-      const canvas = document.createElement('canvas')
-      const ctx = canvas.getContext('2d')
-      const canvasCopy = document.createElement('canvas')
-      const copyContext = canvasCopy.getContext('2d')
-
-      // Create original image
-      const img = new Image()
-      img.src = base64
-
-      // Determine new ratio based on max size
-      let ratio = 1
-      if (img.width > maxWidth) ratio = maxWidth / img.width
-      else if (img.height > maxHeight) ratio = maxHeight / img.height
-
-      // Draw original image in second canvas
-      canvasCopy.width = img.width
-      canvasCopy.height = img.height
-      copyContext.drawImage(img, 0, 0)
-
-      // Copy and resize second canvas to first canvas
-      canvas.width = img.width * ratio
-      canvas.height = img.height * ratio
-      ctx.drawImage(
-        canvasCopy,
-        0,
-        0,
-        canvasCopy.width,
-        canvasCopy.height,
-        0,
-        0,
-        canvas.width,
-        canvas.height
-      )
-      console.log(canvas.toDataURL())
-      return canvas.toDataURL()
     }
   }
 }

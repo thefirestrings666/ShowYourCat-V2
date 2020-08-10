@@ -1,7 +1,9 @@
 <template>
   <div class="page-wrapper">
     <div class="component-wrapper">
+      <SuccessAnimation v-if="success"></SuccessAnimation>
       <base-image-input
+        v-if="!success"
         :key="resetUploader"
         :color-placeholder="borderErrorPlaceholder"
         :p-text="picText"
@@ -17,8 +19,9 @@
           isImage = false
           borderErrorPlaceholder = ''
         "
+        @picture="updatePicture"
       ></base-image-input>
-      <div class="field-aera">
+      <div v-if="!success" class="field-aera">
         <input
           v-model="v_name"
           type="text"
@@ -26,12 +29,17 @@
           :style="style"
         />
       </div>
-      <div class="field-aera">
+      <div v-if="!success" class="field-aera">
         <label>Birthday</label>
         <date-picker v-model="v_date" is-inline />
       </div>
       <div class="field-aera flex">
-        <div data-test="login-btn" class="login-btn" @click="testData">
+        <div
+          v-if="!success"
+          data-test="login-btn"
+          class="login-btn"
+          @click="testData"
+        >
           Okay !
         </div>
         <router-link to="/home">
@@ -46,25 +54,33 @@
 
 <script>
 import DatePicker from 'v-calendar/lib/components/date-picker.umd'
+import Firebase from 'firebase'
+
+import { mapActions } from 'vuex'
 
 import BaseImageInput from '../components/internComponents/BaseImageInput.vue'
+import SuccessAnimation from '../components/AnimationSuccess.vue'
 
 export default {
   components: {
     BaseImageInput,
-    DatePicker
+    DatePicker,
+    SuccessAnimation
   },
   data() {
     return {
       v_date: null,
       v_name: '',
       v_age: '',
+      v_image: '',
       isImage: false,
       isCropped: false,
       borderError: '#fc0303',
       borderErrorPlaceholder: '',
       borderCropButton: '',
       picText: 'Pick a pic !',
+
+      success: false,
 
       resetUploader: 412,
 
@@ -77,7 +93,7 @@ export default {
     }
   },
   methods: {
-    testData() {
+    async testData() {
       if (!this.isCropped) {
         this.borderCropButton = 'border-color: red; color: #fc0303 '
       } else {
@@ -100,10 +116,34 @@ export default {
         this.v_date = ''
       }
 
-      if (this.v_name && this.isImage) {
+      if (this.v_name && this.v_image) {
         console.log('OK for creation')
+
+        Firebase.firestore()
+          .collection('cats')
+          .add({
+            name: this.v_name,
+            userId: Firebase.auth().currentUser.uid,
+            catPicture: 'null',
+            creationDate: new Date(),
+            weekVote: 0
+          })
+          .then(
+            idNewCat =>
+              Firebase.storage()
+                .ref(`catAvatars/${idNewCat.id}`)
+                .putString(this.v_image, 'data_url'),
+            this.UpdateCat(),
+            (this.success = true)
+          )
       }
-    }
+    },
+    updatePicture(pic) {
+      this.isImage = true
+      this.v_image = pic
+    },
+
+    ...mapActions('authentication', ['UpdateCat'])
   }
 }
 </script>

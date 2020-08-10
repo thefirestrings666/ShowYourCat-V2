@@ -86,14 +86,19 @@ export default {
     }
   },
   computed: {
-    ...mapGetters('authentication', ['isUserLoggedIn']),
+    ...mapGetters('authentication', ['isUserLoggedIn', 'getUserCat']),
     ...mapGetters('app', ['isCameraAvailable']),
     ...mapState('authentication', ['user'])
   },
   methods: {
     selectFile() {
       // this.$refs.fileInput.click()
-      this.v_popupNewCat = true
+
+      if (this.getUserCat) {
+        this.$refs.fileInput.click()
+      } else {
+        this.v_popupNewCat = true
+      }
     },
     onSelectFile(imageReturned) {
       const input = imageReturned.target
@@ -115,7 +120,8 @@ export default {
         }
       }
     },
-    ...mapActions('userData', ['setPictureToUpload'])
+    ...mapActions('userData', ['setPictureToUpload']),
+    ...mapActions('authentication', ['catChecking'])
   }
 }
 </script>

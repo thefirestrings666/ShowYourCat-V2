@@ -1,6 +1,12 @@
 <template>
   <div class="page-wrapper">
     <div class="component-wrapper">
+      <div v-if="!loading && !success">
+        <h4>{{ user.cat.name }}</h4>
+      </div>
+      <div v-if="!loading && !success">
+        <img class="catAvatar" :src="user.cat.catPicture" />
+      </div>
       <img v-if="!loading && !success" width="100%" :src="getPictureToUpload" />
       <LoadingAnimation v-if="loading && !success"></LoadingAnimation>
       <SuccessAnimation v-if="!loading && success"></SuccessAnimation>
@@ -58,7 +64,11 @@ export default {
     ...mapState('authentication', ['user']),
     ...mapGetters('userData', ['getPictureToUpload'])
   },
-  mounted() {
+  async mounted() {
+    const testy = await firebase.functions().httpsCallable('checkLimitVote')({
+      data: this.user.cat.name
+    })
+    console.log(testy)
     this.photoImported = this.getPictureToUpload
     this.setCameraOff()
     if (!this.photoImported) {
@@ -72,6 +82,8 @@ export default {
     uploadCat() {
       this.loading = true
       this.photoId = `${this.user.id}-${this.getRandomInt(0, 500000000)}`
+
+      firebase.functions().httpsCallable('checkLimitVote')({ data: true })
 
       const storageRef = firebase
         .storage()
@@ -113,7 +125,7 @@ export default {
       this.$router.push({ name: 'home' })
     },
 
-    ...mapActions('app', ['addPictureDB']),
+    ...mapActions('authentication', ['addPictureDB']),
     ...mapMutations('app', ['setCameraOff', 'setCameraOn'])
   }
 }
@@ -148,6 +160,10 @@ export default {
   img {
     width: 80%;
     margin: 5px;
+  }
+
+  .catAvatar {
+    width: 50px;
   }
   input {
     width: 60%;

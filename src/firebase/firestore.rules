@@ -3,20 +3,32 @@ service cloud.firestore {
   function authenticated() { return request.auth.uid != null }
   
     match /users/{userId} {
-       allow get: if authenticated() && request.auth.uid == userId;
+       allow get, read: if authenticated() && request.auth.uid == userId;
        allow create: if authenticated() && request.auth.uid == userId;
        allow update, delete: if authenticated() && request.auth.uid == userId;
     }
 
+    match /cats/{catId} {
+      allow write, read, update : if authenticated() ;
+    }
+    
+    match /appConfiguration/{configId} {
+       allow read;
+    }
+    match /appConfiguration/{configId}/levelsGrid/{lvlGridIdId} {
+       allow read;
+    }
+
     match /CatPictures/{catPictureId} {
-allow write, read, update : if authenticated() ;
+				allow write, read, update : if authenticated() ;
     }
     
     match /users/{userId}/products/{productId} {
-allow write, read, update : if authenticated() ;
+				allow write, read, update : if authenticated() ;
     }
 
-    match /users/{userId}/user_Data/{user_DataId} {
+   
+    match /users/{userId}/userData/{userDataId} {
       allow get: if authenticated() && request.auth.uid == userId;
 			allow list: if authenticated() && request.auth.uid == userId;
       allow create: if authenticated() && request.auth.uid == userId;

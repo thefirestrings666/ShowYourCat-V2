@@ -2,6 +2,7 @@ import firebase from 'firebase/app'
 import router from '@/router'
 import { isNil } from 'lodash'
 import { createNewUserFromFirebaseAuthUser } from '@/misc/helpers'
+import CatPicturesDB from '@/firebase/catPictures-data-db'
 
 import UsersDB from '@/firebase/users-db'
 
@@ -25,6 +26,7 @@ export default {
       user.xpToReach = 100
       user.isPictureUpdated = false
       user.photoURL = 'avatars/nopicture.png'
+      user.cat = {}
     } else {
       user = userFromFirebase // user from DB
       const userData = await firebase
@@ -38,6 +40,7 @@ export default {
       user.coins = userData.data().coins
       user.level = userData.data().level
       user.xp = userData.data().xp
+      user.cat = null
     }
 
     // Listener for resized picture
@@ -98,7 +101,7 @@ export default {
       })
 
     dispatch('userData/load_userData', user, { root: true })
-
+    dispatch('UpdateCat') // Checking if cat exist, and update store
     commit('setUser', user) // Initialise user
 
     // User activation
@@ -129,6 +132,49 @@ export default {
       })
   },
 
+  /** Update user cat  */
+
+  UpdateCat: async ({ commit }) => {
+    firebase
+      .firestore()
+      .collection('cats/')
+      .where('userId', '==', firebase.auth().currentUser.uid)
+      .get()
+      .then(result => {
+        if (!result.empty) {
+          result.forEach(element => {
+            const payload = element.data()
+            commit('updateUserCat', payload)
+          })
+        }
+      })
+      .catch(error => {
+        console.log(error)
+      })
+  },
+  // add the cat picture into the db
+  addPictureDB: async ({ commit }, payloadV) => {
+    const CatPicturesDb = new CatPicturesDB()
+
+    await CatPicturesDb.create({
+      userID: firebase.auth().currentUser.uid,
+      pictureID: `${payloadV.PictureId}_600x600`,
+      title: payloadV.title,
+      votes: 0,
+      approved: false,
+      resized: false
+    }).then(result => {
+      firebase
+        .firestore()
+        .doc(`CatPictures/${result.id}`)
+        .update({
+          catID: result.id
+        })
+      commit('updateUserCatID', result.id)
+    })
+  },
+
+  //* * Checking if cat existe */
   /**
    * Callback fired when user logout
    */
