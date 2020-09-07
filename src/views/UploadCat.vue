@@ -1,40 +1,98 @@
 <template>
   <div class="page-wrapper">
-    <div class="component-wrapper">
-      <div v-if="!loading && !success">
-        <h4>{{ user.cat.name }}</h4>
-      </div>
-      <div v-if="!loading && !success">
-        <img class="catAvatar" :src="user.cat.catPicture" />
-      </div>
-      <img v-if="!loading && !success" width="100%" :src="getPictureToUpload" />
-      <LoadingAnimation v-if="loading && !success"></LoadingAnimation>
-      <SuccessAnimation v-if="!loading && success"></SuccessAnimation>
-      <input
-        v-if="!loading && !success"
-        id="title"
-        v-model="u_title"
-        type="text"
-        placeholder="Title"
-      />
+    <transition
+      name="fxPopup25"
+      enter-active-class="animated fadeIn fast"
+      leave-active-class="animated fadeOut fast"
+      @after-leave="showResult = true"
+    >
+      <div
+        v-if="!loading && !success && showAnimation"
+        class="component-wrapper"
+      >
+        <div>
+          <h4>{{ user.cat.name }}</h4>
+        </div>
+        <div class="avatarCat">
+          <LoadingAnimationDots
+            v-if="getUserId.cat.catPicture == null"
+          ></LoadingAnimationDots>
+          <img v-else class="catAvatar" :src="user.cat.catPicture" />
+        </div>
+        <img width="100%" :src="getPictureToUpload" />
 
-      <div
-        v-if="!loading && !success"
-        data-test="login-btn"
-        class="login-btn"
-        @click="uploadCat"
-      >
-        Send my cat
+        <input id="title" v-model="u_title" type="text" placeholder="Title" />
+
+        <!-- Buttons -->
+
+        <div
+          v-show="!runUpload"
+          data-test="login-btn"
+          class="login-btn"
+          @click="uploadCat"
+        >
+          Send my cat
+        </div>
+        <div v-show="runUpload" class="login-btn-hold">
+          <LoadingAnimationDots></LoadingAnimationDots>
+        </div>
+        <div data-test="login-btn" class="login-btn" @click="backHome">
+          Back
+        </div>
       </div>
-      <div
-        v-if="!loading && success"
-        data-test="login-btn"
-        class="login-btn"
-        @click="backHome"
-      >
-        Back
+    </transition>
+    <transition
+      name="fxPopup25"
+      enter-active-class="animated fadeIn fast"
+      leave-active-class="animated fadeOut fast"
+    >
+      <div v-if="!loading && success && showResult" class="component-wrapper">
+        <!----------->
+        <!--Success-->
+        <!----------->
+        <div v-if="!loading && success && !error" class="popup column">
+          <SuccessAnimation :animation="1"> </SuccessAnimation>
+          <h4>Your cat is online !</h4>
+          <div
+            v-if="!loading && success"
+            data-test="login-btn"
+            class="login-btn"
+            @click="backHome"
+          >
+            Back
+          </div>
+        </div>
+        <!----------->
+        <!-- Error -->
+        <!----------->
+        <div v-else class="popup">
+          <div class="side">
+            <SuccessAnimation :animation="0"> </SuccessAnimation>
+
+            <p>photos uploaded</p>
+            <h3>5/5</h3>
+            <p>Please wait</p>
+            <p>{{ timeRemaining }}</p>
+            <div
+              v-if="!loading && success"
+              data-test="login-btn"
+              class="login-btn"
+              @click="backHome"
+            >
+              Back
+            </div>
+          </div>
+          <div class="side">
+            <h3>Or buy 5 more</h3>
+            <div data-test="btn" class="btn">
+              <span>5 x </span
+              ><span><SVGCoin :width="40" :height="25"></SVGCoin></span>
+            </div>
+          </div>
+        </div>
+        <LoadingAnimation v-if="loading && !success"></LoadingAnimation>
       </div>
-    </div>
+    </transition>
   </div>
 </template>
 
@@ -42,33 +100,47 @@
 import firebase from 'firebase'
 import { mapGetters, mapState, mapActions, mapMutations } from 'vuex'
 import LoadingAnimation from '../components/AnimationLoading.vue'
+
+import LoadingAnimationDots from '../components/AnimationLoadingData.vue'
 import SuccessAnimation from '../components/AnimationSuccess.vue'
+import SVGCoin from '../components/svg-coin.vue'
 
 export default {
   components: {
     LoadingAnimation,
-    SuccessAnimation
+    SuccessAnimation,
+
+    LoadingAnimationDots,
+    SVGCoin
   },
   data() {
     return {
       photoImported: null,
+      catAvatarUpdated: false,
       photoId: null,
       u_title: null,
       uploadValue: 0,
 
       loading: false,
-      success: false
+      success: false,
+      error: false,
+
+      timeRemaining: '',
+
+      showAnimation: false,
+      showResult: false,
+      runUpload: false
     }
   },
   computed: {
     ...mapState('authentication', ['user']),
-    ...mapGetters('userData', ['getPictureToUpload'])
+    ...mapGetters('userData', ['getPictureToUpload']),
+    ...mapGetters('authentication', ['getUserId'])
   },
-  async mounted() {
-    const testy = await firebase.functions().httpsCallable('checkLimitVote')({
-      data: this.user.cat.name
-    })
-    console.log(testy)
+  mounted() {
+    setTimeout(() => {
+      this.showAnimation = true
+    }, 200)
     this.photoImported = this.getPictureToUpload
     this.setCameraOff()
     if (!this.photoImported) {
@@ -79,36 +151,65 @@ export default {
     this.setCameraOn()
   },
   methods: {
-    uploadCat() {
-      this.loading = true
-      this.photoId = `${this.user.id}-${this.getRandomInt(0, 500000000)}`
+    async testyCat() {
+      await firebase
+        .functions()
+        .httpsCallable('checkLimitUpload')({
+          data: this.user.cat.name
+        })
+        .then(response => {
+          this.payload = response
+        })
 
-      firebase.functions().httpsCallable('checkLimitVote')({ data: true })
+      return this.payload.data
+    },
+    async uploadCat() {
+      this.runUpload = true
+      const responseApproval = await this.testyCat()
 
-      const storageRef = firebase
-        .storage()
-        .ref(`catPicture/${this.photoId}`)
-        .putString(this.photoImported, 'data_url')
-      storageRef.on(
-        'state_changed',
-        snapshot => {
-          this.uploadValue =
-            (snapshot.bytesTransferred / snapshot.totalBytes) * 100
-        },
-        error => {
-          console.log(error.message)
-        },
-        () => {
-          const payload = {
-            PictureId: this.photoId,
-            title: this.u_title
+      if (responseApproval.Approved === 1) {
+        this.loading = true
+        this.photoId = `${this.user.id}-${this.getRandomInt(0, 500000000)}`
+
+        const storageRef = firebase
+          .storage()
+          .ref(`catPicture/${this.photoId}`)
+          .putString(this.photoImported, 'data_url')
+        storageRef.on(
+          'state_changed',
+          snapshot => {
+            this.uploadValue =
+              (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+          },
+          error => {
+            console.log(error.message)
+          },
+          () => {
+            const payload = {
+              PictureId: this.photoId,
+              title: this.u_title
+            }
+
+            this.addPictureDB(payload)
+            this.loading = false
+            this.success = true
           }
+        )
+      } else {
+        this.loading = false
+        this.success = true
+        this.error = true
 
-          this.addPictureDB(payload)
-          this.loading = false
-          this.success = true
-        }
-      )
+        const calculDay = parseInt(
+          (168 - responseApproval.TimebetweenVotes) / 24,
+          10
+        )
+        const calculHours = Math.round(
+          ((168 - responseApproval.TimebetweenVotes) / 24 - calculDay) * 24
+        )
+
+        this.timeRemaining = `${calculDay} days ${calculHours} hours`
+      }
     },
 
     getRandomInt(min, max) {
@@ -125,7 +226,7 @@ export default {
       this.$router.push({ name: 'home' })
     },
 
-    ...mapActions('authentication', ['addPictureDB']),
+    ...mapActions('authentication', ['addPictureDB', 'updateCatAvatar']),
     ...mapMutations('app', ['setCameraOff', 'setCameraOn'])
   }
 }
@@ -161,9 +262,16 @@ export default {
     width: 80%;
     margin: 5px;
   }
-
+  .avatarCat {
+    min-height: 64px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
   .catAvatar {
     width: 50px;
+    animation: anim-catAvatar 0.5s;
   }
   input {
     width: 60%;
@@ -180,6 +288,8 @@ export default {
   }
   .login-btn {
     margin: 5px;
+    min-width: 128px;
+    text-align: center;
     cursor: pointer;
     padding: 5px 20px;
     border: 1px solid;
@@ -190,6 +300,84 @@ export default {
     &:hover {
       color: $vue-color;
       border-color: $vue-color;
+    }
+  }
+
+  .login-btn-hold {
+    margin: 5px;
+    cursor: pointer;
+    min-width: 128px;
+    padding: 5px 20px;
+    border: 1px solid;
+    display: flex;
+    justify-content: center;
+    border-radius: 3px;
+    border-color: $border-color;
+  }
+
+  .popup {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    width: 90%;
+
+    .side {
+      flex-basis: 50%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .btn {
+      background-color: $jaune-1;
+      width: 140px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 5px;
+      cursor: pointer;
+      padding: 5px 5px;
+      border: 1px solid;
+
+      border-radius: 3px;
+      border-color: $border-color;
+
+      &:hover {
+        background-color: $background-over;
+      }
+
+      span {
+        display: flex;
+        justify-content: center;
+        flex-basis: 30%;
+      }
+    }
+    p,
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+      margin: 0px 0px;
+    }
+  }
+
+  .column {
+    flex-direction: column;
+    h4 {
+      text-align: center;
+    }
+  }
+  @keyframes anim-catAvatar {
+    0% {
+      width: 0px;
+    }
+
+    100% {
+      width: 50px;
+      transform: rotate(360deg);
     }
   }
 }

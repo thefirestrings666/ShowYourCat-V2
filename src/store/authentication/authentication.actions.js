@@ -101,8 +101,24 @@ export default {
       })
 
     dispatch('userData/load_userData', user, { root: true })
-    dispatch('UpdateCat') // Checking if cat exist, and update store
+
+    // Checking if a cat exist
     commit('setUser', user) // Initialise user
+
+    dispatch('listenerUserData')
+
+    await firebase
+      .firestore()
+      .collection('cats/')
+      .where('userId', '==', firebase.auth().currentUser.uid)
+      .get()
+      .then(response => {
+        if (!response.empty) {
+          response.forEach(doc => {
+            dispatch('UpdateCat', doc.data()) // Checking if cat exist, and update store
+          })
+        }
+      })
 
     // User activation
     if (!user.emailVerified) {
@@ -111,6 +127,7 @@ export default {
     }
   },
 
+  // update user details
   updateUserDetails: async ({ commit }, id) => {
     const userDb = new UsersDB()
     const userFromFirebase = await userDb.read(id)
@@ -134,24 +151,36 @@ export default {
 
   /** Update user cat  */
 
-  UpdateCat: async ({ commit }) => {
-    firebase
-      .firestore()
-      .collection('cats/')
-      .where('userId', '==', firebase.auth().currentUser.uid)
-      .get()
-      .then(result => {
-        if (!result.empty) {
-          result.forEach(element => {
-            const payload = element.data()
-            commit('updateUserCat', payload)
-          })
-        }
-      })
-      .catch(error => {
-        console.log(error)
-      })
+  UpdateCat: async ({ dispatch, commit }, receivedData) => {
+    if (receivedData) {
+      commit('updateUserCat', receivedData)
+      dispatch('listenerCatUpdate')
+    }
+
+    // firebase
+    //   .firestore()
+    //   .collection('cats/')
+    //   .where('userId', '==', firebase.auth().currentUser.uid)
+    //   .get()
+    //   .then(result => {
+    //     if (!result.empty) {
+    //       result.forEach(element => {
+    //         const payload = element.data()
+    //         commit('updateUserCat', payload)
+    //         // dispatch('listenerCatUpdate') // Listener for updated cat avatar
+    //       })
+    //     }
+    //   })
+    //   .catch(error => {
+    //     console.log(error)
+    //   })
   },
+
+  // update cat Avatar
+  updateCatAvatar: ({ commit }, data) => {
+    commit('updateCatAvatar', data)
+  },
+
   // add the cat picture into the db
   addPictureDB: async ({ commit }, payloadV) => {
     const CatPicturesDb = new CatPicturesDB()
@@ -174,7 +203,29 @@ export default {
     })
   },
 
-  //* * Checking if cat existe */
+  // listener cat avatar
+
+  listenerCatUpdate: async ({ state, commit }) => {
+    firebase
+      .firestore()
+      .doc(`cats/${state.user.cat.catID}`)
+      .onSnapshot(snap => {
+        commit('updateCatData', snap.data())
+      })
+  },
+
+  // listener cat avatar
+
+  listenerUserData: async ({ state, commit, dispatch }) => {
+    firebase
+      .firestore()
+      .doc(`users/${state.user.id}/userData/d${state.user.id}`)
+      .onSnapshot(snap => {
+        commit('userData/updateUserData', snap.data(), { root: true })
+        dispatch('userData/setNextLevel', true, { root: true })
+      })
+  },
+
   /**
    * Callback fired when user logout
    */

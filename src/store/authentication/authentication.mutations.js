@@ -10,6 +10,9 @@ export default {
   setUserPictureResized: (state, value) =>
     (state.user.isPictureUpdated = value),
 
-  updateUserCat: (state, value) => (state.user.cat = value),
-  updateUserCatID: (state, value) => (state.user.cat.id = value)
+  updateUserCat: (state, value) => {
+    state.user.cat = value
+  },
+  updateUserCatID: (state, value) => (state.user.cat.id = value),
+  updateCatData: (state, value) => (state.user.cat = value)
 }

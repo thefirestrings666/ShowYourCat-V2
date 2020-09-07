@@ -1,7 +1,7 @@
 <template>
   <div class="page-wrapper">
     <div class="component-wrapper">
-      <SuccessAnimation v-if="success"></SuccessAnimation>
+      <SuccessAnimation v-if="success" :animation="1"></SuccessAnimation>
       <base-image-input
         v-if="!success"
         :key="resetUploader"
@@ -56,7 +56,7 @@
 import DatePicker from 'v-calendar/lib/components/date-picker.umd'
 import Firebase from 'firebase'
 
-import { mapActions } from 'vuex'
+import { mapActions, mapMutations } from 'vuex'
 
 import BaseImageInput from '../components/internComponents/BaseImageInput.vue'
 import SuccessAnimation from '../components/AnimationSuccess.vue'
@@ -92,6 +92,9 @@ export default {
       return `border: ${this.borderError}`
     }
   },
+  created() {
+    this.setCameraOff()
+  },
   methods: {
     async testData() {
       if (!this.isCropped) {
@@ -119,21 +122,37 @@ export default {
       if (this.v_name && this.v_image) {
         console.log('OK for creation')
 
+        const userID = Firebase.auth().currentUser.uid
+        const dateNow = new Date()
+
         Firebase.firestore()
           .collection('cats')
           .add({
             name: this.v_name,
-            userId: Firebase.auth().currentUser.uid,
-            catPicture: 'null',
-            creationDate: new Date(),
-            weekVote: 0
+            userId: userID,
+            catPicture: null,
+            creationDate: dateNow,
+            weekUpload: 0,
+            avatarIsResized: false
           })
           .then(
-            idNewCat =>
+            idNewCat => {
               Firebase.storage()
                 .ref(`catAvatars/${idNewCat.id}`)
-                .putString(this.v_image, 'data_url'),
-            this.UpdateCat(),
+                .putString(this.v_image, 'data_url')
+
+              const payload = {
+                catID: idNewCat.id,
+                name: this.v_name,
+                userId: userID,
+                catPicture: null,
+                creationDate: dateNow,
+                weekUpload: 0,
+                avatarIsResized: false
+              }
+              this.UpdateCat(payload)
+            },
+
             (this.success = true)
           )
       }
@@ -143,7 +162,8 @@ export default {
       this.v_image = pic
     },
 
-    ...mapActions('authentication', ['UpdateCat'])
+    ...mapActions('authentication', ['UpdateCat', 'listenerCatUpdate']),
+    ...mapMutations('app', ['setCameraOff', 'setCameraOn'])
   }
 }
 </script>

@@ -16,7 +16,8 @@ import Firebase from 'firebase'
 export default {
   data() {
     return {
-      pictureURL: null
+      pictureURL: null,
+      payload: null
     }
   },
 
@@ -33,6 +34,8 @@ export default {
 
       const storage = Firebase.storage()
 
+      this.payload = allPictures[random]
+
       await storage
         .ref(`catPicture/${allPictures[random].pictureID}`)
         .getDownloadURL()
@@ -44,7 +47,7 @@ export default {
         })
     },
     isLoaded() {
-      this.$emit('loadingDone')
+      this.$emit('loadingDone', { payload: this.payload })
     },
     callFunction() {
       setTimeout(() => {

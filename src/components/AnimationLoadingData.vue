@@ -1,11 +1,11 @@
 <template>
   <div class="loading-wrapper">
     <svg
-      width="20"
-      height="5"
+      width="21"
+      height="21"
       viewBox="0 0 120 30"
       xmlns="http://www.w3.org/2000/svg"
-      fill="#fff"
+      fill="#856600"
     >
       <circle cx="15" cy="15" r="15">
         <animate
@@ -83,7 +83,9 @@ export default {}
 
 <style lang="scss" scoped>
 .loading-wrapper {
+
+  text-align: center;
   width: 100%;
-  height: 25px;
+  height: 21px;
 }
 </style>

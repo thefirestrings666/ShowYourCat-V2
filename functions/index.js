@@ -43,8 +43,6 @@ exports.addXP = functions.https.onCall(async (req, context) => {
     .doc(`appConfiguration/gameData`)
     .get()
 
-  console.log(gameData.data())
-
   var timeDuringVotes = Date.now() - userInfo.data().lastVoteTime.seconds * 1000
 
   if (timeDuringVotes > 2500) {
@@ -122,7 +120,9 @@ exports.triggerCatAvatar = functions.storage
           .firestore()
           .doc(`cats/${catID}`)
           .update({
-            catPicture: `https://firebasestorage.googleapis.com/v0/b/showyourcat-v2.appspot.com/o/catAvatars%2F${catID}_600x600?alt=media&token=${object.metadata.firebaseStorageDownloadTokens}`
+            catPicture: `https://firebasestorage.googleapis.com/v0/b/showyourcat-v2.appspot.com/o/catAvatars%2F${catID}_600x600?alt=media&token=${object.metadata.firebaseStorageDownloadTokens}`,
+            catID: catID,
+            avatarIsResized: true
           })
       }
 
@@ -191,23 +191,109 @@ exports.createUserData = functions.https.onCall(async (req, context) => {
   return true
 })
 
-exports.checkLimitVote = functions.https.onCall(async (req, context) => {
-  var returnVal = null
-  console.log(context)
+exports.checkLimitUpload = functions.https.onCall(async (req, context) => {
+  var weekUpload = null
+  var startDate = new Date()
+  var timeBetweenVotes = null
+
+  var approvedVar = 0
+  var returnMessage = ''
+
+  const userID = context.auth.uid
+  // Loading Game Data
+  const gameData = await admin
+    .firestore()
+    .doc(`appConfiguration/gameData`)
+    .get()
+
+  const coinsPerUpload = gameData.data().coinsPerUpload
+
   await admin
     .firestore()
     .collection('cats')
-    .where('userId', '==', context.uid)
-    .where('name', '==', req.data)
+    .where('userId', '==', context.auth.uid)
     .get()
     .then(result => {
       result.forEach(doc => {
-        returnVal = doc.data().weekVote
-        console.log(returnVal)
+        weekUpload = doc.data().weekUpload
+
+        // No photo uploaded yet
+        if (weekUpload === 0) {
+          admin
+            .firestore()
+            .doc('cats/' + doc.data().catID)
+            .update({
+              dateStartingVote: startDate,
+              weekUpload: 1
+            })
+          admin
+            .firestore()
+            .doc(`users/${userID}/userData/d${userID}`)
+            .update({
+              coins: admin.firestore.FieldValue.increment(coinsPerUpload)
+            })
+          approvedVar = 1
+          returnMessage = `Approved! New vote count : ${doc.data().weekUpload +
+            1}`
+        } else {
+          timeBetweenVotes =
+            (Date.now() - doc.data().dateStartingVote.seconds * 1000) /
+            6000 /
+            60 /
+            10
+
+          if (timeBetweenVotes > 168) {
+            // Success to create upload
+            admin
+              .firestore()
+              .doc('cats/' + doc.data().catID)
+              .update({
+                dateStartingVote: startDate,
+                weekUpload: 1
+              })
+            admin
+              .firestore()
+              .doc(`users/${userID}/userData/d${userID}`)
+              .update({
+                coins: admin.firestore.FieldValue.increment(coinsPerUpload)
+              })
+            approvedVar = 1
+            returnMessage = `Approved! New upload count : 1`
+          } else {
+            if (doc.data().weekUpload < 5) {
+              admin // updating the weekly upload
+                .firestore()
+                .doc('cats/' + doc.data().catID)
+                .update({
+                  weekUpload: admin.firestore.FieldValue.increment(1)
+                })
+              admin // giving the coin
+                .firestore()
+                .doc(`users/${userID}/userData/d${userID}`)
+                .update({
+                  coins: admin.firestore.FieldValue.increment(coinsPerUpload)
+                })
+              approvedVar = 1
+              returnMessage = `Approved! New upload count : ${doc.data()
+                .weekUpload + 1}`
+            } else {
+              approvedVar = 0
+              returnMessage = 'Not Approved, too many upload this week'
+            }
+          }
+        }
       })
       return true
     })
-    .catch(error => {
-      console.log(error)
-    })
+
+  const payload = {
+    Approved: approvedVar,
+    Name: req.data,
+    weekUpload: weekUpload,
+    StartDate: startDate.toString(),
+    TimebetweenVotes: timeBetweenVotes,
+    ReturnedMessage: returnMessage
+  }
+
+  return payload
 })

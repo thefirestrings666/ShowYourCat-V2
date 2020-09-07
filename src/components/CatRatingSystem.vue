@@ -60,7 +60,9 @@ export default {
       v_xpGenerator: false,
       v_addNewCat: true,
       v_readOnly: false,
-      refreshStars: 10250
+      refreshStars: 10250,
+
+      payloadCat: null
     }
   },
   computed: {
@@ -69,6 +71,7 @@ export default {
   },
   created() {
     this.old_xp = this.user_data.xp
+    this.setCameraOn()
   },
 
   methods: {
@@ -76,9 +79,11 @@ export default {
       this.setCameraOff()
       this.loadingDone = false
       this.voteDone = false
-      this.var_VoteSelected = 0
+
       this.v_readOnly = true
       this.refreshStars += 1
+
+      const dateNow = new Date()
 
       Firebase.functions()
         .httpsCallable('addXP')({ data: 'id' })
@@ -87,13 +92,71 @@ export default {
           this.u_xp = newXP.data.totalXP
           this.v_xpGenerator = true
           this.voteDone = true
+
+          // update the cat stats
+          Firebase.firestore()
+            .doc(`CatPictures/${this.payloadCat.catID}`)
+            .update({
+              votes: Firebase.firestore.FieldValue.increment(
+                this.var_VoteSelected
+              )
+            })
+
+          Firebase.firestore()
+            .collection(
+              `CatPictures/${
+                this.payloadCat.catID
+              }/log/${dateNow.getFullYear()}/${dateNow.getMonth() + 1}`
+            )
+            .add({
+              date: dateNow,
+              userID: Firebase.auth().currentUser.uid,
+              note: this.var_VoteSelected
+            })
+
+          Firebase.firestore()
+            .doc(
+              `CatPictures/${
+                this.payloadCat.catID
+              }/log/${dateNow.getFullYear()}/${dateNow.getMonth() +
+                1}/monthlyReport/`
+            )
+            .update({
+              votesTotal: Firebase.firestore.FieldValue.increment(
+                this.var_VoteSelected
+              )
+            })
+            .then(() => {
+              this.var_VoteSelected = 0
+            })
+            .catch(error => {
+              if (error) {
+                Firebase.firestore()
+                  .doc(
+                    `CatPictures/${
+                      this.payloadCat.catID
+                    }/log/${dateNow.getFullYear()}/${dateNow.getMonth() +
+                      1}/monthlyReport/`
+                  )
+                  .set({
+                    votesTotal: Firebase.firestore.FieldValue.increment(
+                      this.var_VoteSelected
+                    )
+                  })
+                this.var_VoteSelected = 0
+              } else {
+                this.var_VoteSelected = 0
+              }
+            })
         })
     },
     animationDone() {
       this.randomVar += 1
       this.v_loading = true
     },
-    loadingIsDone() {
+    loadingIsDone(payload) {
+      this.payloadCat = payload.payload
+
       this.loadingDone = true
     },
     timer() {
